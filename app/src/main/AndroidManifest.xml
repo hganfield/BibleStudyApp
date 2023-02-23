@@ -12,6 +12,11 @@
         android:theme="@style/Theme.BibleStudyApp"
         tools:targetApi="31">
         <activity
+            android:name=".MainActivity4"
+            android:exported="false"
+            android:label="@string/title_activity_main4"
+            android:theme="@style/Theme.BibleStudyApp.NoActionBar" />
+        <activity
             android:name=".MainActivity2"
             android:exported="false" />
         <activity
