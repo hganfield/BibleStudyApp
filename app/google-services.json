@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "898977505534",
+    "project_id": "prototype-adff3",
+    "storage_bucket": "prototype-adff3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:898977505534:android:5d8d57c26d7a3aadc885af",
+        "android_client_info": {
+          "package_name": "com.example.biblestudyapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "898977505534-tuhg6t3l61rkghpoqk564lqp08e27fda.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.biblestudyapp",
+            "certificate_hash": "494a49fd1b09d402fe76e1f2ba4d857f313f8dc0"
+          }
+        },
+        {
+          "client_id": "898977505534-r468an15nn8i6ushllu882vurhe74c2h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUknaqn-fPl4byvw8HbliGWaVVEUeL2KA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "898977505534-r468an15nn8i6ushllu882vurhe74c2h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
