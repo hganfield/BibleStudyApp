@@ -40,14 +40,11 @@ public class CreateAccount extends AppCompatActivity {
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                authentification.createUserWithEmailAndPassword(EmailText.toString(),PasswordText.toString()).addOnCompleteListener(CreateAccount.this, new OnCompleteListener<AuthResult>() {
+                authentification.createUserWithEmailAndPassword(EmailText.getText().toString(),PasswordText.getText().toString()).addOnCompleteListener(CreateAccount.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if(task.isSuccessful()){
-                                  Intent intent = getIntent();
-                                  Intent result = new Intent();
-                                  result.putExtra("user",authentification.getCurrentUser());
-                                  setResult(14, result);
+                                  setResult(14);
                                   finish();
 
                                 }

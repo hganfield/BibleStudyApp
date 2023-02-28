@@ -31,13 +31,15 @@ public class LoginPage extends AppCompatActivity {
     ActivityResultLauncher<Intent> activitiyLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
         public void onActivityResult(ActivityResult result) {
-            Intent intent;
             if(result.getResultCode() == 14){
-                intent = result.getData();
-                Intent startup = new Intent(LoginPage.this,HomePage.class);
-                FirebaseAuth user = intent.getParcelableExtra("user");
-                startup.putExtra("main-user", user.getCurrentUser());
-                startActivity(startup);
+                if(auth.getCurrentUser() != null) {
+                    Intent startup = new Intent(LoginPage.this,HomePage.class);
+                    Toast.makeText(LoginPage.this,"User is not Null",Toast.LENGTH_SHORT).show();
+                    startActivity(startup);
+                }
+                else{
+                    Toast.makeText(LoginPage.this,"User is Null",Toast.LENGTH_SHORT).show();
+                }
 
             }
         }
