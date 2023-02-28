@@ -11,6 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BibleStudyApp"
         tools:targetApi="31">
+
         <activity
             android:name=".books"
             android:exported="false" />
@@ -23,7 +24,7 @@
             android:name=".MainActivity2"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".Firebase"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.BibleStudyApp.NoActionBar">
@@ -33,7 +34,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>
