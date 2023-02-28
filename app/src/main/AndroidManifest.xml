@@ -11,7 +11,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BibleStudyApp"
         tools:targetApi="31">
-
+        <activity
+            android:name=".HomePage"
+            android:exported="false" />
+        <activity
+            android:name=".ManageGroupUI"
+            android:exported="false" />
         <activity
             android:name=".books"
             android:exported="false" />
