@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/Accountbu"
+    android:id="@+id/Menu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".HomePage">
@@ -11,24 +11,27 @@
         android:id="@+id/BibleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:srcCompat="@android:drawable/ic_input_get"
-        tools:layout_editor_absoluteX="177dp"
-        tools:layout_editor_absoluteY="769dp" />
+        tools:layout_editor_absoluteX="177dp" />
 
     <ImageButton
         android:id="@+id/GroupButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:srcCompat="@android:drawable/btn_star"
-        tools:layout_editor_absoluteX="258dp"
-        tools:layout_editor_absoluteY="769dp" />
+        tools:layout_editor_absoluteX="258dp" />
 
     <ImageButton
         android:id="@+id/AccountButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="28dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:srcCompat="@android:drawable/btn_star"
-        tools:layout_editor_absoluteX="328dp"
-        tools:layout_editor_absoluteY="766dp" />
+        tools:layout_editor_absoluteX="328dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
