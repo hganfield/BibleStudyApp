@@ -9,6 +9,15 @@
     tools:context=".CreateAccount">
 
     <EditText
+        android:id="@+id/Username"
+        android:layout_width="354dp"
+        android:layout_height="65dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:ems="10"
+        android:hint="Username"
+        android:inputType="text" />
+    <EditText
         android:id="@+id/Address"
         android:layout_width="354dp"
         android:layout_height="65dp"
@@ -35,5 +44,14 @@
         android:layout_marginRight="100dp"
         android:layout_marginLeft="100dp"
         android:text="Login" />
+
+    <Button
+        android:id="@+id/Previous"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text ="Previous"
+        android:layout_marginRight="100dp"
+        android:layout_marginLeft="100dp"
+        />
 
 </LinearLayout>
