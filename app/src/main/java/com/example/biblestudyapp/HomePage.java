@@ -51,7 +51,7 @@ public class HomePage extends AppCompatActivity {
         groupButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                startActivity(new Intent(HomePage.this, BiblePage.class));
+                startActivity(new Intent(HomePage.this, AccountPage.class));
             }
         });
 
