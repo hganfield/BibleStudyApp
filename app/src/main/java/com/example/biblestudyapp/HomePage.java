@@ -54,5 +54,15 @@ public class HomePage extends AppCompatActivity {
                 startActivity(new Intent(HomePage.this, BiblePage.class));
             }
         });
+
+        ImageButton BibleButton = (ImageButton) findViewById(R.id.BibleButton);
+
+        // when groupButton from homepage is clicked, the UI for managing user account is opened
+        groupButton.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                startActivity(new Intent(HomePage.this, BiblePage.class));
+            }
+        });
     }
 }
