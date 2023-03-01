@@ -49,20 +49,20 @@ public class HomePage extends AppCompatActivity {
                 startActivity(new Intent(HomePage.this, ManageGroupUI.class));
             }
         });
-        ImageButton AccountButton = (ImageButton) findViewById(R.id.AccountButton);
+        ImageButton accountButton = (ImageButton) findViewById(R.id.AccountButton);
 
         // when groupButton from homepage is clicked, the UI for managing user account is opened
-        groupButton.setOnClickListener(new View.OnClickListener() {
+        accountButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
                 startActivity(new Intent(HomePage.this, AccountPage.class));
             }
         });
 
-        ImageButton BibleButton = (ImageButton) findViewById(R.id.BibleButton);
+        ImageButton bibleButton = (ImageButton) findViewById(R.id.BibleButton);
 
         // when groupButton from homepage is clicked, the UI for managing user account is opened
-        groupButton.setOnClickListener(new View.OnClickListener() {
+        bibleButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
                 startActivity(new Intent(HomePage.this, BiblePage.class));
