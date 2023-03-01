@@ -6,6 +6,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * Class to connect API with getHTTPRequest
+ */
 public class getHttpRequest {
     private static final String URL = "https://api.scripture.api.bible/v1/swagger.json";
     private static final String GET = "GET";
