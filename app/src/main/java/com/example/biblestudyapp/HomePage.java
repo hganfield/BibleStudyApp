@@ -1,5 +1,6 @@
 package com.example.biblestudyapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -13,8 +14,11 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class HomePage extends AppCompatActivity {
 
@@ -29,10 +33,22 @@ public class HomePage extends AppCompatActivity {
         Intent intent = getIntent();
         user = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance().getReference();
-       if(user != null) {
-            String username1 = database.child("users").child(user.getUid()).child("username").getKey();
-            name = findViewById(R.id.DisplayName);
-            name.setText(username1);
+       if(user != null){
+           database.addValueEventListener(new ValueEventListener() {
+               @Override
+               public void onDataChange(@NonNull DataSnapshot snapshot) {
+                   String username1 = snapshot.child("users").child(user.getUid()).getValue(User.class).getUsername();
+                   snapshot.child("users").child(user.getUid()).getValue(User.class).newGroup(new Group(null,"Software Team"));
+                   name = findViewById(R.id.DisplayName);
+                   name.setText(username1);
+               }
+
+               @Override
+               public void onCancelled(@NonNull DatabaseError error) {
+
+               }
+           });
+
         }
         else{
             Toast.makeText(HomePage.this,"User is Null",Toast.LENGTH_SHORT).show();

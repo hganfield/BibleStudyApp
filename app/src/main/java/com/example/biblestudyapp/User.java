@@ -1,5 +1,7 @@
 package com.example.biblestudyapp;
 
+import com.google.firebase.database.DatabaseReference;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,10 +11,17 @@ public class User {
     private String email;
     private List<Group> groups;
 
+    private DatabaseReference mDatabase;
+
     public User(){
 
     }
-
+    public User(String uid, String username, String email){
+        this.uid = uid;
+        this.username = username;
+        this.email = email;
+        groups = new ArrayList<Group>();
+    }
     public User(String uid, String username, String email, ArrayList<Group> groups){
         this.uid = uid;
         this.username = username;
