@@ -20,6 +20,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 public class HomePage extends AppCompatActivity {
 
     private TextView name;
@@ -38,7 +40,8 @@ public class HomePage extends AppCompatActivity {
                @Override
                public void onDataChange(@NonNull DataSnapshot snapshot) {
                    String username1 = snapshot.child("users").child(user.getUid()).getValue(User.class).getUsername();
-                   snapshot.child("users").child(user.getUid()).getValue(User.class).newGroup(new Group(null,"Software Team"));
+
+                   //snapshot.child("users").child(user.getUid()).getValue(User.class).newGroup(new Group(null,"Software Team"));
                    name = findViewById(R.id.DisplayName);
                    name.setText(username1);
                }
@@ -48,6 +51,10 @@ public class HomePage extends AppCompatActivity {
 
                }
            });
+           ArrayList<Group> a = new ArrayList<Group>();
+           a.add(new Group(null,"Software Team"));
+           database.child("users").child(user.getUid()).child("groups").setValue(a);
+
 
         }
         else{

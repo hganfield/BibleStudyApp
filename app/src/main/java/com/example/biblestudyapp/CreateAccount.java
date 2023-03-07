@@ -85,7 +85,7 @@ public class CreateAccount extends AppCompatActivity {
                                   setResult(14);
                                   Intent intent;
                                   intent = new Intent();
-                                  User user = new User(FirebaseAuth.getInstance().getUid(),Username.getText().toString(),EmailText.getText().toString(), new ArrayList<Group>());
+                                  User user = new User(FirebaseAuth.getInstance().getUid(),Username.getText().toString(),EmailText.getText().toString(), null);
                                   mDatabase.child("users").child(FirebaseAuth.getInstance().getUid()).setValue(user);
                                   mDatabase.child("users").child(FirebaseAuth.getInstance().getUid()).child("groups").setValue(new ArrayList<Group>());
                                   finish();
