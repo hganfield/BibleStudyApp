@@ -24,8 +24,17 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginPage extends AppCompatActivity {
 
+    /*
+    Used to authorize email and password
+     */
     private FirebaseAuth auth;
+    /*
+    The Email address the user types in
+     */
     private EditText Email;
+    /*
+    The Password the user types in
+     */
     private EditText Password;
 
     ActivityResultLauncher<Intent> activitiyLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
@@ -34,7 +43,6 @@ public class LoginPage extends AppCompatActivity {
             if(result.getResultCode() == 14){
                 if(auth.getCurrentUser() != null) {
                     Intent startup = new Intent(LoginPage.this,HomePage.class);
-                    Toast.makeText(LoginPage.this,"User is not Null",Toast.LENGTH_SHORT).show();
                     startActivity(startup);
                 }
                 else{
@@ -54,6 +62,8 @@ public class LoginPage extends AppCompatActivity {
 
         Email = findViewById(R.id.editTextTextEmailAddress2);
         Password = findViewById(R.id.editTextTextPassword);
+
+
         Button login = (Button) findViewById(R.id.buttonLogin);
         Button createAcc = (Button) findViewById(R.id.buttonCreate);
 
@@ -67,7 +77,7 @@ public class LoginPage extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            FirebaseUser user = auth.getCurrentUser();
+                            //FirebaseUser user = auth.getCurrentUser();
                             Intent intent = new Intent(LoginPage.this,HomePage.class);
                             startActivity(intent);
 
@@ -81,6 +91,9 @@ public class LoginPage extends AppCompatActivity {
         });
 
         createAcc.setOnClickListener(new View.OnClickListener() {
+            /*
+             * The create account button and what it does
+             */
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(LoginPage.this,CreateAccount.class);
