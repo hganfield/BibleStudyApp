@@ -25,6 +25,6 @@ public class BiblePage extends AppCompatActivity {
         });
 
         WebView bible = (WebView) findViewById(R.id.Bible);
-        bible.loadUrl("file:///android_asset/bible.html");
+        bible.loadUrl("file:///android_asset/books.html");
     }
 }
