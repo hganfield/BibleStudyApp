@@ -18,8 +18,8 @@
 <div class="subheader">
     <div class="container flex">
         <div class="subheadings">
-            <h2>Viewing:</h2>
-            <h3 id="viewing"></h3>
+            <h2>Selected section:</h2>
+            <h3 id="viewing"><span id="section"></span></h3>
         </div>
         <div class="search-area flex">
             <button onclick="searchButton()">🔎</button>
@@ -37,59 +37,58 @@
     <div id="breadcrumbs"></div>
 </div>
 <main class="container">
-    <h4 class="list-heading"><span>Select a Book</span></h4>
-    <div id="book-list" class="list-container"></div>
+    <div id="section-content" class="section-container"></div>
 </main>
 <script src="js/my_key.js"></script>
+<script src="http://cdn.scripture.api.bible/fums/fumsv2.min.js"></script>
 <script>
-      const bibleBookList = document.querySelector(`#book-list`);
-const breadcrumbs = document.querySelector(`#breadcrumbs`);
+      const bibleSectionTitle = document.querySelector(`#section`);
+const bibleSectionList = document.querySelector(`#section-content`);
 const bibleVersionID = getParameterByName(`version`);
+const bibleSectionID = getParameterByName(`section`);
 const abbreviation = getParameterByName(`abbr`);
 
-let bookHTML = ``;
-
-if (!bibleVersionID) {
+if (!bibleVersionID || !bibleSectionID) {
   window.location.href = `./index.html`;
 }
 
-getBooks(bibleVersionID).then((bookList) => {
-  bookHTML += `<ul>`;
-  for (let book of bookList) {
-    bookHTML += `<li><a href="chapter.html?version=${bibleVersionID}&abbr=${abbreviation}&book=${book.id}"> ${book.name} </a></li>`;
+getSelectedSection(bibleVersionID, bibleSectionID).then(
+  ({ content, title }) => {
+    bibleSectionTitle.innerHTML = `<span><i>${title}</i></span>`;
+    bibleSectionList.innerHTML = `<div class="eb-container">${content}</div>`;
   }
-  bookHTML += `</ul>`;
-  bibleBookList.innerHTML = bookHTML;
-});
+);
 
-document.querySelector(`#viewing`).innerHTML = `${abbreviation}`;
+const [book, section] = bibleSectionID.split(`.`);
 const breadcrumbsHTML = `
   <ul>
-    <li><a href="index.html">Home</a></li>
-    <li>${abbreviation}</li>
+    <li><a href="book.html?version=${bibleVersionID}&abbr=${abbreviation}">${abbreviation}</a></li>
+    <li><a href="chapter.html?version=${bibleVersionID}&abbr=${abbreviation}&book=${book}">${book}</a></li>
+    <li>${section}</li>
   </ul>
 `;
 breadcrumbs.innerHTML = breadcrumbsHTML;
 
-function getBooks(bibleVersionID) {
+function getSelectedSection(bibleVersionID, bibleSectionID) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.withCredentials = false;
 
     xhr.addEventListener(`readystatechange`, function () {
       if (this.readyState === this.DONE) {
-        const { data } = JSON.parse(this.responseText);
-        const books = data.map(({ name, id }) => {
-          return { name, id };
-        });
+        const response = JSON.parse(this.responseText);
+        const fumsId = response.meta.fumsId;
+        const { content, title } = response.data;
+        const section = { content, title };
 
-        resolve(books);
+        _BAPI.t(fumsId);
+        resolve(section);
       }
     });
 
     xhr.open(
       `GET`,
-      `https://api.scripture.api.bible/v1/bibles/${bibleVersionID}/books`
+      `https://api.scripture.api.bible/v1/bibles/${bibleVersionID}/sections/${bibleSectionID}?include-chapter-numbers=true&include-verse-spans=true`
     );
     xhr.setRequestHeader(`api-key`, API_KEY);
 
@@ -113,8 +112,6 @@ function searchButton() {
   const searchInput = document.querySelector(`#search-input`);
   window.location.href = `./search.html?&version=${bibleVersionID}&abbr=${abbreviation}&query=${searchInput.value}`;
 }
-
-
     </script>
 </body>
 </html>
