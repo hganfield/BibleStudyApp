@@ -51,9 +51,6 @@ public class HomePage extends AppCompatActivity {
 
                }
            });
-           ArrayList<Group> a = new ArrayList<Group>();
-           a.add(new Group(null,"Software Team"));
-           database.child("users").child(user.getUid()).child("groups").setValue(a);
 
 
         }
