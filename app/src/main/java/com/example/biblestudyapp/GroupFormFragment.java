@@ -70,11 +70,12 @@ public class GroupFormFragment extends Fragment {
                 // TODO: Take information from the fragment and store in database
 
                 //Open new fragment to invite users to the group
-                Fragment fragment = new InviteUsersFragment();
-                FragmentManager fMan = getActivity().getSupportFragmentManager();
-                FragmentTransaction fTransaction = fMan.beginTransaction();
-                fTransaction.replace(R.id.form,fragment);
-                fTransaction.commit();
+
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.InviteUsers,InviteUsersFragment.class,null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
         return myView;

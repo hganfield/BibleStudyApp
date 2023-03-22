@@ -1,8 +1,11 @@
 package com.example.biblestudyapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -17,9 +20,20 @@ public class ManageGroupUI extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_group_ui);
-
+        Button create = (Button) findViewById(R.id.Cbutton);
         user = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance().getReference();
+        create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.fragmentContainerView2,GroupFormFragment.class,null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
         /*
             The Code for adding a user to a new specific group with no people attached
             */
