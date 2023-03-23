@@ -16,8 +16,6 @@ import com.google.firebase.database.ValueEventListener;
 
 public class AccountPage extends AppCompatActivity {
 
-    FirebaseAuth firebaseAuth;
-
     private TextView name;
 
     private TextView email;
