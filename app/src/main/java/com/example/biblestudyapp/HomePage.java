@@ -32,7 +32,6 @@ public class HomePage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
-        Intent intent = getIntent();
         user = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance().getReference();
        if(user != null){

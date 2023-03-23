@@ -93,8 +93,8 @@ header .logo {
   overflow: hidden;
   width: 2.75rem;
   height: 2.75rem;
-  background: #027CFF url("../img/logo.png") center no-repeat;
   background-size: 22px auto;
+
 }
 header h1 {
   text-align: right;
