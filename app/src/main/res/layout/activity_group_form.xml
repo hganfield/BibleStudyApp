@@ -5,7 +5,7 @@
     android:id="@+id/form"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".GroupFormFragment">
+    tools:context=".GroupForm">
 
     <!-- TODO: Update blank fragment layout -->
 

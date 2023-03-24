@@ -82,13 +82,13 @@ public class InviteUsersFragment extends Fragment {
     }
 
 
-    ArrayList<User> usersList;
+    ArrayList<String> usersList;
     FirebaseAuth firebaseAuth;
     // List View object
     ListView listView;
 
     // Define array adapter for ListView
-    ArrayAdapter<User> adapter;
+    ArrayAdapter<String> adapter;
 
     Context context;
 
@@ -119,7 +119,11 @@ public class InviteUsersFragment extends Fragment {
                 usersList = new ArrayList<>();
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     User user = dataSnapshot1.getValue(User.class);
-                    usersList.add(user);
+                    if(user.getUid() != null && !user.getUid().equals(firebaseAuth.getCurrentUser().getUid())) {
+                        //user.getUsername();
+                        //Toast.makeText(InviteUsersFragment.this.getContext(), user.getUsername(), Toast.LENGTH_LONG).show();
+                        usersList.add(user.getUsername());
+                    }
                 }
                 if(usersList.isEmpty()){
                    Toast.makeText(InviteUsersFragment.this.getContext(), "Empty", Toast.LENGTH_LONG).show();
