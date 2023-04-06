@@ -41,6 +41,11 @@ public class CreateAccount extends AppCompatActivity {
     private EditText PasswordText;
 
     /*
+    The phone number typed in by the user
+     */
+    private EditText PhoneText;
+
+    /*
     Reference to the Firebase database
      */
     private DatabaseReference mDatabase;
@@ -57,6 +62,7 @@ public class CreateAccount extends AppCompatActivity {
         Username = findViewById(R.id.Username);
         EmailText = findViewById(R.id.Address);
         PasswordText = findViewById(R.id.Password);
+        PhoneText = findViewById(R.id.Phone);
 
         Button previous = (Button) findViewById(R.id.Previous);
 
@@ -85,7 +91,7 @@ public class CreateAccount extends AppCompatActivity {
                                   setResult(14);
                                   Intent intent;
                                   intent = new Intent();
-                                  User user = new User(FirebaseAuth.getInstance().getUid(),Username.getText().toString(),EmailText.getText().toString(), null);
+                                  User user = new User(FirebaseAuth.getInstance().getUid(),Username.getText().toString(),EmailText.getText().toString(), PhoneText.toString());
                                   mDatabase.child("users").child(FirebaseAuth.getInstance().getUid()).setValue(user);
                                   mDatabase.child("users").child(FirebaseAuth.getInstance().getUid()).child("groups").setValue(new ArrayList<Group>());
                                   finish();
