@@ -20,6 +20,8 @@ public class AccountPage extends AppCompatActivity {
 
     private TextView email;
 
+    private TextView phone;
+
     FirebaseUser currentUser;
 
     private DatabaseReference reference;
@@ -39,6 +41,8 @@ public class AccountPage extends AppCompatActivity {
                 name.setText(user.getUsername());
                 email = findViewById(R.id.realEmail);
                 email.setText(user.getEmail());
+                phone = findViewById(R.id.realPhone);
+                phone.setText(user.getPhoneNumber());
             }
 
             @Override
