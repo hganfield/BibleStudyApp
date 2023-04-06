@@ -35,6 +35,8 @@
 </div>
 <h4 class="list-heading"><span>Select a Chapter</span></h4>
 <div id="chapter-list" class="list-container numeric-list"></div>
+<h4 id="select-prompt" class="list-heading"><span>Select a Section</span></h4>
+<div id="section-list" class="list-container section-list"></div>
 <div class="container crumbs">
     <div id="breadcrumbs"></div>
 </div>
@@ -43,14 +45,11 @@
     <div id="book-list" class="list-container"></div>
 </main>
 //section that may not be added in right spot
-<h4 id="select-prompt" class="list-heading"><span>Select a Section</span></h4>
-<div id="section-list" class="list-container section-list"></div>
 // end that section
 <script src="js/my_key.js"></script>
 <script>
-      const bibleChapterList = document.querySelector(`#chapter-list`);
-
-      const bibleSectionList = document.querySelector(`#section-list`);
+const bibleChapterList = document.querySelector(`#chapter-list`);
+const bibleSectionList = document.querySelector(`#section-list`);
 const bibleVersionID = getParameterByName(`version`);
 const bibleBookID = getParameterByName(`book`);
 const abbreviation = getParameterByName(`abbr`);
@@ -109,8 +108,19 @@ function getChapters(bibleVersionID, bibleBookID) {
         resolve(chapters);
       }
     });
+        xhr.open(
+      `GET`,
+      `https://api.scripture.api.bible/v1/bibles/${bibleVersionID}/books/${bibleBookID}/chapters`
+    );
+    xhr.setRequestHeader(`api-key`, API_KEY);
 
-    function getSections(bibleVersionID, bibleBookID) {
+    xhr.onerror = () => reject(xhr.statusText);
+
+    xhr.send();
+  });
+}
+
+function getSections(bibleVersionID, bibleBookID) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.withCredentials = false;
@@ -140,17 +150,6 @@ function getChapters(bibleVersionID, bibleBookID) {
   });
 }
 
-    xhr.open(
-      `GET`,
-      `https://api.scripture.api.bible/v1/bibles/${bibleVersionID}/books/${bibleBookID}/chapters`
-    );
-    xhr.setRequestHeader(`api-key`, API_KEY);
-
-    xhr.onerror = () => reject(xhr.statusText);
-
-    xhr.send();
-  });
-}
 
 function getParameterByName(name) {
   const url = window.location.href;
