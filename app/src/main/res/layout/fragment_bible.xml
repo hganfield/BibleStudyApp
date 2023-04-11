@@ -2,8 +2,47 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout"
+    android:id="@+id/layoutver"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".BibleFragment" />
+    tools:context=".BibleFragment">
+
+    <LinearLayout
+        android:id="@+id/layouthorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/spinnerbooks"
+            android:layout_width="139dp"
+            android:layout_height="82dp"
+            android:background="@android:drawable/btn_dropdown"
+            android:contentDescription="Books"
+            android:spinnerMode="dropdown" />
+
+        <Spinner
+            android:id="@+id/spinnerchapters"
+            android:layout_width="139dp"
+            android:layout_height="82dp"
+            android:background="@android:drawable/btn_dropdown"
+            android:contentDescription="Chapters"
+            android:spinnerMode="dropdown"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/retrieve"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Go" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"></LinearLayout>
+
+</LinearLayout>

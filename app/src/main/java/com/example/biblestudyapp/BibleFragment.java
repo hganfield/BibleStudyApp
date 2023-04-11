@@ -2,9 +2,6 @@ package com.example.biblestudyapp;
 
 import static android.content.ContentValues.TAG;
 
-import retrofit2.converter.gson.GsonConverterFactory;
-
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -15,43 +12,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import io.grpc.okhttp.internal.proxy.HttpUrl;
-import io.grpc.okhttp.internal.proxy.Request;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -105,87 +83,17 @@ public class BibleFragment extends Fragment{
     private static Map<String,String> verseMap;
     private static Map<String, String> bibleIds;
 
-    public interface BibleIDsCallback {
-        void onBibleIDsReceived();
-    }
+    public static Map<String, String> bookMap;
 
-    private void retrieveBibleIds(BibleIDsCallback callback) {
-        System.out.println("In RetrieveBibleIDS!!!!!");
+    public static Map<String, Integer> bookChapterMap;
 
-        String url = "https://api.scripture.api.bible/v1/bibles";
-        new HttpGetTask(callback).execute(url);
-    }
+    public static String book_ref;
 
-    private class HttpGetTask extends AsyncTask<String, Void, String> {
+    public static String chapter_ref;
 
-        private final BibleIDsCallback callback;
+    public static String reference;
 
-        public HttpGetTask(BibleIDsCallback callback) {
-            this.callback = callback;
-        }
-        @Override
-        protected String doInBackground(String... params) {
-            String url = params[0];
-            String result = null;
-            try {
-                URL urlObj = new URL(url);
-                HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
-                conn.setRequestMethod("GET");
-                conn.setConnectTimeout(10000); // 10 seconds
-                conn.setRequestProperty("api-key", apikey);
-                conn.connect();
-                int responseCode = conn.getResponseCode();
-                if(responseCode >= 400){
-                    System.out.println(params[0]);
-                    System.out.println("Error: " + responseCode);
-                    System.out.println(conn.getResponseMessage());
-                    return "1";
 
-                }
-                System.out.println("Connection!!!!!");
-
-                InputStream in = conn.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                StringBuilder sb = new StringBuilder();
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-                }
-                result = sb.toString();
-                in.close();
-                reader.close();
-                conn.disconnect();
-            } catch (Exception e) {
-                Log.e(TAG, "Error: " + e.getMessage());
-            }
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            // Use the result of the HTTP request
-            try {
-                if(result == null){
-                    return;
-                }
-                System.out.println("FillingMap!!!!!");
-
-                JSONObject json = new JSONObject(result);
-                JSONArray data = json.getJSONArray("data");
-                bibleIds = new HashMap<>();
-                for (int i = 0; i < data.length(); i++) {
-                    JSONObject bible = data.getJSONObject(i);
-                    String id = bible.getString("id");
-                    String name = bible.getString("name");
-                    bibleIds.put(name,id);
-                }
-                callback.onBibleIDsReceived();
-                // Do something with the map of Bible IDs
-            } catch (JSONException e) {
-                Log.e(TAG, "Error parsing JSON: " + e.getMessage());
-            }
-        }
-    }
 
 
     @Override
@@ -193,9 +101,10 @@ public class BibleFragment extends Fragment{
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bible, container, false);
         String trans = "KJV";
-        String reference ="GEN.1";
-        System.out.println("BEFORECALL!!!!!");
-        verseMap = new HashMap<String,String>();
+
+        //System.out.println("BEFORECALL!!!!!");
+
+        verseMap = new HashMap<String, String>();
         verseMap.put("ASV", "06125adad2d5898a-01");
         verseMap.put("KJV", "de4e12af7f28f599-02");
         verseMap.put("Reina Valera 1909", "592420522e16049f-01");
@@ -221,17 +130,206 @@ public class BibleFragment extends Fragment{
         verseMap.put("NTPrv", "17c44f6c89de00db-01");
         verseMap.put("New Arabic Version", "b17e246951402e50-01");
 
+        bookMap = new HashMap<String, String>() {{
+            put("Genesis", "GEN");
+            put("Exodus", "EXO");
+            put("Leviticus", "LEV");
+            put("Numbers", "NUM");
+            put("Deuteronomy", "DEU");
+            put("Joshua", "JOS");
+            put("Judges", "JDG");
+            put("Ruth", "RUT");
+            put("1 Samuel", "1SA");
+            put("2 Samuel", "2SA");
+            put("1 Kings", "1KI");
+            put("2 Kings", "2KI");
+            put("1 Chronicles", "1CH");
+            put("2 Chronicles", "2CH");
+            put("Ezra", "EZR");
+            put("Nehemiah", "NEH");
+            put("Ester", "EST");
+            put("Job", "JOB");
+            put("Psalm", "PSA");
+            put("Proverbs", "PRO");
+            put("Ecclesiastes", "ECC");
+            put("Song of Solomon", "SNG");
+            put("Isaiah", "ISA");
+            put("Jeremiah", "JER");
+            put("Lamentations", "LAM");
+            put("Ezekiel", "EZK");
+            put("Daniel", "DAN");
+            put("Hosea", "HOS");
+            put("Joel", "JOL");
+            put("Amos", "AMO");
+            put("Obadiah", "OBA");
+            put("Jonah", "JON");
+            put("Micah", "MIC");
+            put("Nahum", "NAM");
+            put("Habakkuk", "HAB");
+            put("Zephaniah", "ZEP");
+            put("Haggai", "HAG");
+            put("Zechariah", "ZEC");
+            put("Malachi", "MAL");
+            put("Matthew", "MAT");
+            put("Mark", "MRK");
+            put("Luke", "LUK");
+            put("John", "JHN");
+            put("Acts", "ACT");
+            put("Romans", "ROM");
+            put("1 Corinthians", "1CO");
+            put("2 Corinthians", "2CO");
+            put("Galatians", "GAL");
+            put("Ephesians", "EPH");
+            put("Philippians", "PHP");
+            put("Colossians", "COL");
+            put("1 Thessalonians", "1TH");
+            put("2 Thessalonians", "2TH");
+            put("1 Timothy", "1TI");
+            put("2 Timothy", "2TI");
+            put("Titus", "TIT");
+            put("Philemon", "PHM");
+            put("Hebrews", "HEB");
+            put("James", "JAS");
+            put("1 Peter", "1PE");
+            put("2 Peter", "2PE");
+            put("1 John", "1JN");
+            put("2 John", "2JN");
+            put("3 John", "3JN");
+            put("Jude", "JUD");
+            put("Revelation", "REV");
+        }};
 
-        retrieveBibleIds(new BibleIDsCallback() {
+        Spinner books_selection = view.findViewById(R.id.spinnerbooks);
+        Spinner chapter_selection = view.findViewById(R.id.spinnerchapters);
+        String[] books = bookMap.keySet().toArray(new String[0]);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, books);
+        books_selection.setAdapter(adapter);
+
+        bookChapterMap = new HashMap<>();
+        bookChapterMap.put("Genesis", 50);
+        bookChapterMap.put("Exodus", 40);
+        bookChapterMap.put("Leviticus", 27);
+        bookChapterMap.put("Numbers", 36);
+        bookChapterMap.put("Deuteronomy", 34);
+        bookChapterMap.put("Joshua", 24);
+        bookChapterMap.put("Judges", 21);
+        bookChapterMap.put("Ruth", 4);
+        bookChapterMap.put("1 Samuel", 31);
+        bookChapterMap.put("2 Samuel", 24);
+        bookChapterMap.put("1 Kings", 22);
+        bookChapterMap.put("2 Kings", 25);
+        bookChapterMap.put("1 Chronicles", 29);
+        bookChapterMap.put("2 Chronicles", 36);
+        bookChapterMap.put("Ezra", 10);
+        bookChapterMap.put("Nehemiah", 13);
+        bookChapterMap.put("Ester", 10);
+        bookChapterMap.put("Job", 42);
+        bookChapterMap.put("Psalm", 150);
+        bookChapterMap.put("Proverbs", 31);
+        bookChapterMap.put("Ecclesiastes", 12);
+        bookChapterMap.put("Song of Solomon", 8);
+        bookChapterMap.put("Isaiah", 66);
+        bookChapterMap.put("Jeremiah", 52);
+        bookChapterMap.put("Lamentations", 5);
+        bookChapterMap.put("Ezekiel", 48);
+        bookChapterMap.put("Daniel", 12);
+        bookChapterMap.put("Hosea", 14);
+        bookChapterMap.put("Joel", 3);
+        bookChapterMap.put("Amos", 9);
+        bookChapterMap.put("Obadiah", 1);
+        bookChapterMap.put("Jonah", 4);
+        bookChapterMap.put("Micah", 7);
+        bookChapterMap.put("Nahum", 3);
+        bookChapterMap.put("Habakkuk", 3);
+        bookChapterMap.put("Zephaniah", 3);
+        bookChapterMap.put("Haggai", 2);
+        bookChapterMap.put("Zechariah", 14);
+        bookChapterMap.put("Malachi", 4);
+        bookChapterMap.put("Matthew", 28);
+        bookChapterMap.put("Mark", 16);
+        bookChapterMap.put("Luke", 24);
+        bookChapterMap.put("John", 21);
+        bookChapterMap.put("Acts", 28);
+        bookChapterMap.put("Romans", 16);
+        bookChapterMap.put("1 Corinthians", 16);
+        bookChapterMap.put("2 Corinthians", 13);
+        bookChapterMap.put("Galatians", 6);
+        bookChapterMap.put("Ephesians", 6);
+        bookChapterMap.put("Philippians", 4);
+        bookChapterMap.put("Colossians", 4);
+        bookChapterMap.put("1 Thessalonians", 5);
+        bookChapterMap.put("2 Thessalonians", 3);
+        bookChapterMap.put("1 Timothy", 6);
+        bookChapterMap.put("2 Timothy", 4);
+        bookChapterMap.put("Titus", 3);
+        bookChapterMap.put("Philemon", 1);
+        bookChapterMap.put("Hebrews", 13);
+        bookChapterMap.put("James", 5);
+        bookChapterMap.put("1 Peter", 5);
+        bookChapterMap.put("2 Peter", 3);
+        bookChapterMap.put("1 John", 5);
+
+
+        books_selection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onBibleIDsReceived() {
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                chapter_selection.setVisibility(view.VISIBLE);
+                String book = adapterView.getItemAtPosition(i).toString();
+                book_ref = bookMap.get(book);
+                System.out.println(book_ref);
+                int number_of_books = bookChapterMap.get(book);
+                String[] chapters;
+                if (number_of_books == 1) {
+                    chapters = new String[]{"1"};
+                } else {
+                    chapters = new String[number_of_books];
+                    for (int j = 1; j <= number_of_books; j++) {
+                        chapters[j - 1] = String.valueOf(j);
+                    }
+                }
+
+                ArrayAdapter<String> Chapteradapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, chapters);
+                Chapteradapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                chapter_selection.setAdapter(Chapteradapter);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        chapter_selection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String chapter = adapterView.getItemAtPosition(i).toString();
+                chapter_ref = chapter;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        System.out.println(book_ref);
+        System.out.println(chapter_ref);
+
+        System.out.println(reference);
+
+        Button retrieve = (Button) view.findViewById(R.id.retrieve);
+        View view2 = view;
+        retrieve.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                reference = book_ref + "." + chapter_ref;
                 System.out.println("Recieved!!!!!");
-                getBible(trans,reference,view);
+                getBible(trans, reference, view2);
             }
         });
 
         return view;
     }
+
 
     public void getBible(String trans,String reference, View bible) {
         System.out.println("Getting the verse!!!!!");
@@ -298,19 +396,21 @@ public class BibleFragment extends Fragment{
             super.onPostExecute(chapterContent);
 
             if (chapterContent != null) {
+                LinearLayout layout = view.findViewById(R.id.layoutText);
+                layout.removeAllViews();
                 // Create a new TextView to display the chapter content
-                TextView textView = new TextView(view.getContext());
-                textView.setTextSize(18);
-                textView.setPadding(16, 16, 16, 16);
-                textView.setText(Html.fromHtml(chapterContent));
 
                 // Split the chapter content into separate verses using a regular expression
                 String[] verses = chapterContent.split("<br>\\s*");
 
                 // Add a click listener to each verse
+                View verseView = null;
                 for (int i = 0; i < verses.length; i++) {
                     final int verseNumber = i + 1;
-                    textView.setOnClickListener(new View.OnClickListener() {
+                    verseView = getLayoutInflater().inflate(R.layout.verse_layout, null);
+                    TextView verseTextView = verseView.findViewById(R.id.verseTextView);
+                    verseTextView.setText(Html.fromHtml(verses[i]));
+                    verseTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             // Handle verse click
@@ -320,8 +420,7 @@ public class BibleFragment extends Fragment{
                 }
 
                 // Add the TextView to the layout
-                LinearLayout layout = view.findViewById(R.id.layout);
-                layout.addView(textView);
+                layout.addView(verseView);
             } else {
                 // Handle error case
                 //Toast.makeText(context, "Error retrieving chapter", Toast.LENGTH_SHORT).show();
