@@ -10,6 +10,7 @@ public class User {
     private String username;
     private String email;
 
+    private List<Journal> journalList;
     private String phoneNumber;
     private List<Group> groups;
 
@@ -23,6 +24,7 @@ public class User {
         this.username = username;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        journalList = new ArrayList<Journal>();
         groups = new ArrayList<Group>();
     }
     public User(String uid, String username, String email, String phoneNumber, ArrayList<Group> groups){
@@ -30,6 +32,7 @@ public class User {
         this.username = username;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        journalList = new ArrayList<Journal>();
         this.groups = groups;
     }
 
@@ -37,6 +40,9 @@ public class User {
         return phoneNumber;
     }
 
+    public List<Journal> getJournals() {
+        return journalList;
+    }
     public String getUid() {
         return uid;
     }
