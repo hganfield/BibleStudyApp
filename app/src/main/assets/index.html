@@ -31,7 +31,7 @@
       const versionList = document.querySelector(`#bible-version-list`);
 let versionHTML = ``;
 getBibleVersions().then((bibleVersionList) => {
-  const sortedVersions = bibleVersionList;
+  const sortedVersions = sortVersionsByLanguage(bibleVersionList);
 
   for (let languageGroup in sortedVersions) {
     const language = languageGroup;
@@ -73,7 +73,7 @@ function getBibleVersions() {
     xhr.addEventListener(`readystatechange`, function () {
       if (this.readyState === this.DONE) {
         const { data } = JSON.parse(this.responseText);
-        const versions = data?.map((data) => {
+        const versions = data.map((data) => {
           return {
             name: data.name,
             id: data.id,

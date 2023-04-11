@@ -13,6 +13,7 @@ public class Books extends AppCompatActivity {
         setContentView(R.layout.activity_books);
 
         WebView booksview = (WebView) findViewById(R.id.booksview);
+        booksview.getSettings().setJavaScriptEnabled(true);
         booksview.loadUrl("file:///android_asset/books.html");
     }
 }
