@@ -2,12 +2,17 @@ package com.example.biblestudyapp;
 
 import static android.content.ContentValues.TAG;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
 import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,8 +33,12 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -399,29 +408,49 @@ public class BibleFragment extends Fragment{
                 LinearLayout layout = view.findViewById(R.id.layoutText);
                 layout.removeAllViews();
                 // Create a new TextView to display the chapter content
+                View verseView = getLayoutInflater().inflate(R.layout.verse_layout, null);
+                LinearLayout verseLayout = verseView.findViewById(R.id.verseLayout);
+                //"<p class=\"p\"><span data-number=\"\\d+\".*?class=\"v\">\\d+</span>"
+                int firstVerseIndex = chapterContent.indexOf(">",69);
+                // Extract the content starting from the first verse index
+                String contentAfterFirstVerse = chapterContent.substring(firstVerseIndex+1);
 
-                // Split the chapter content into separate verses using a regular expression
-                String[] verses = chapterContent.split("<br>\\s*");
+                String[] verses = contentAfterFirstVerse.split("<span data-number=\"\\d+\".*?class=\"v\">\\d+</span>");
 
-                // Add a click listener to each verse
-                View verseView = null;
-                for (int i = 0; i < verses.length; i++) {
-                    final int verseNumber = i + 1;
-                    verseView = getLayoutInflater().inflate(R.layout.verse_layout, null);
-                    TextView verseTextView = verseView.findViewById(R.id.verseTextView);
-                    verseTextView.setText(Html.fromHtml(verses[i]));
+
+
+
+                int i = 1;
+                TextView prev = null;
+                TextView prevprev = null;
+                for (String verse: verses) {
+                    TextView verseTextView = new TextView(getContext());
+                    verseTextView.setText(i++ + ". " + Html.fromHtml(verse));
+                    verseTextView.setPadding(10, 10, 10, 10);
+                    verseTextView.setTextSize(16);
+                    verseTextView.setTextColor(Color.BLACK);
+                    verseTextView.setTextSize(16); // set the font size
+                    verseTextView.setLineSpacing(0,1.5f);
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+                    layoutParams.setMargins(0, 0, 0, 0); // set the margin top to 16dp
+                    verseTextView.setLayoutParams(layoutParams);
                     verseTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             // Handle verse click
-                            Toast.makeText(view.getContext(), "Verse " + verseNumber + " clicked", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(view.getContext(), "Verse " + number++ + " clicked", Toast.LENGTH_SHORT).show();
                         }
                     });
+                    verseLayout.addView(verseTextView);
                 }
 
                 // Add the TextView to the layout
                 layout.addView(verseView);
-            } else {
+            }
+            else {
                 // Handle error case
                 //Toast.makeText(context, "Error retrieving chapter", Toast.LENGTH_SHORT).show();
             }

@@ -1,5 +1,6 @@
 package com.example.biblestudyapp;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -12,6 +13,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -68,14 +71,22 @@ public class GroupFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //if(getActivity() != null) {
-          //  ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
-        //}
+        setHasOptionsMenu(true);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        System.out.println("Resume");
+        ((HomePage) getActivity()).setActionBarVisible(false);
+    }
+
     FirebaseUser user;
     DatabaseReference database;
 
@@ -98,5 +109,7 @@ public class GroupFragment extends Fragment {
 
         return view;
     }
+
+
 
 }
