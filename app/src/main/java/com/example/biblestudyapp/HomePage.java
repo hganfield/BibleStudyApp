@@ -1,8 +1,15 @@
 package com.example.biblestudyapp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+
 
 import android.content.ClipData;
 import android.content.Intent;
@@ -12,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,10 +41,18 @@ public class HomePage extends AppCompatActivity {
     private FirebaseUser user;
 
     private DatabaseReference database;
+
+    private boolean isActionBarVisible = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+
+
+        //NavController navController = NavHostFragment.findNavController(this);
+
+
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance().getReference();
        if(user != null){
@@ -104,13 +120,34 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
-        Button signout = (Button) findViewById(R.id.signout);
-        signout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-                finish();
+        //Button signout = (Button) findViewById(R.id.signout);
+        //signout.setOnClickListener(new View.OnClickListener() {
+         //   @Override
+           // public void onClick(View view) {
+             //   FirebaseAuth.getInstance().signOut();
+               // finish();
+            //}
+        //});
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        System.out.println("HomeResume");
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.container);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        if (currentFragment instanceof HomeFragment && isActionBarVisible) {
+            if (toolbar != null) {
+                ConstraintLayout constraintLayout = findViewById(R.id.Menu);
+                constraintLayout.setVisibility(View.VISIBLE);
+            } else {
+                ConstraintLayout constraintLayout = findViewById(R.id.Menu);
+                constraintLayout.setVisibility(View.GONE);
             }
-        });
+
+        }
+    }
+
+    public void setActionBarVisible(boolean isVisible) {
+        isActionBarVisible = isVisible;
     }
 }

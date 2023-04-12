@@ -2,12 +2,21 @@ package com.example.biblestudyapp;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
@@ -56,7 +65,14 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
+
+    private TextView name;
+
+    private FirebaseUser user;
+
+    private DatabaseReference database;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,6 +82,30 @@ public class HomeFragment extends Fragment {
         TextView text = (TextView) view.findViewById(R.id.verse);
         text.setText("John 3:16 For God so loved the world that He gave his one and only Son, that whoever believes in him shall not perish" +
                 "but have eternal life");
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        database = FirebaseDatabase.getInstance().getReference();
+
+        if(user != null){
+            database.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String username1 = snapshot.child("users").child(user.getUid()).getValue(User.class).getUsername();
+                    name = view.findViewById(R.id.welcome);
+                    name.setText("Welcome "+ username1);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
         return view;
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        ((HomePage) getActivity()).setActionBarVisible(true);
     }
 }

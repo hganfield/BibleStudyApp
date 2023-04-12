@@ -26,7 +26,8 @@
             android:theme="@style/Theme.BibleStudyApp.NoActionBar" />
         <activity
             android:name=".GroupForm"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.BibleStudyApp.NoActionBar"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"
