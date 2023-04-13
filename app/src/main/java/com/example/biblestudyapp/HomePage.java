@@ -61,8 +61,8 @@ public class HomePage extends AppCompatActivity {
                public void onDataChange(@NonNull DataSnapshot snapshot) {
                    String username1 = snapshot.child("users").child(user.getUid()).getValue(User.class).getUsername();
 
-                   name = findViewById(R.id.welcome);
-                   name.setText("Welcome " + username1);
+                   //name = findViewById(R.id.welcome);
+                   //name.setText("Welcome " + username1);
                }
                @Override
                public void onCancelled(@NonNull DatabaseError error) {
