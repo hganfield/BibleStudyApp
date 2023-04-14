@@ -46,6 +46,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,6 +104,8 @@ public class BibleFragment extends Fragment{
 
     private static Map<String,String> verseMap;
 
+    private static Map<String,Integer> highlightList;
+
     private static Map<String, String> bibleIds;
 
     public static Map<String, String> bookMap;
@@ -112,6 +115,8 @@ public class BibleFragment extends Fragment{
     public static String book_ref;
 
     public static String chapter_ref;
+
+    public static String dbchapter_ref;
 
     public static String reference;
 
@@ -347,6 +352,7 @@ public class BibleFragment extends Fragment{
             @Override
             public void onClick(View view) {
                 reference = book_ref + "." + chapter_ref;
+                dbchapter_ref = book_ref + chapter_ref;
                 System.out.println("Recieved!!!!!");
                 getBible(trans, reference, view2);
             }
@@ -359,8 +365,14 @@ public class BibleFragment extends Fragment{
     public void getBible(String trans,String reference, View bible) {
         System.out.println("Getting the verse!!!!!");
         //String urlParameters = "?content-type=json&include-chapter-numbers=false&include-verse-numbers=true&include-footnotes=false&include-footnote-body=false&include-audio-link=false&include-book-titles=false";
-        reference = parseRef(reference);
+       // reference = parseRef(reference);
         String request = "https://api.scripture.api.bible/v1/bibles/" + verseMap.get(trans) + "/chapters/" + reference;
+        retrieveHighlights(dbchapter_ref, new OnHighlightsRetrievedListener() {
+            @Override
+            public void onHighlightsRetrieved(Map<String, Integer> highlights) {
+                highlightList = highlights;
+            }
+        });
         //WebView webView = (WebView) getView().findViewById(R.id.webview);
         new GetVerse(bible).execute(request);
 
@@ -428,7 +440,8 @@ public class BibleFragment extends Fragment{
                 int firstVerseIndex = chapterContent.indexOf(">",69);
                 String contentAfterFirstVerse = chapterContent.substring(firstVerseIndex+1);
                 String[] verses = contentAfterFirstVerse.split("<span data-number=\"\\d+\".*?class=\"v\">\\d+</span>");
-                Map<String,Integer> highlights = retrieveHighlights(book_ref + chapter_ref);
+
+
                 int i = 1;
                 TextView prev = null;
                 TextView prevprev = null;
@@ -449,6 +462,16 @@ public class BibleFragment extends Fragment{
                     layoutParams.setMargins(0, 0, 0, 0); // set the margin top to 16dp
                     verseTextView.setLayoutParams(layoutParams);
                     //registerForContextMenu(verseTextView);
+                    if(highlightList == null || highlightList.isEmpty()){
+                        System.out.println("Map is empty");
+                    }
+                    else if (highlightList.containsKey(Integer.toString(number))) {
+                        System.out.println("In Map");
+                        //verseTextView.setTextColor(Color.YELLOW);
+                        verseTextView.setBackgroundColor(Color.YELLOW);
+                    } else {
+                        //verseTextView.setTextColor(defaultTextColor);
+                    }
                     verseTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -468,6 +491,7 @@ public class BibleFragment extends Fragment{
                             builder.setNegativeButton("Highlight", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                    System.out.println("Clicking");
                                     highlight(verseTextView);
                                 }
                             });
@@ -477,11 +501,7 @@ public class BibleFragment extends Fragment{
                             dialog.show();
                         }
                     });
-                    if (highlights.containsKey(Integer.toString(number))) {
-                        verseTextView.setTextColor(Color.YELLOW);
-                    } else {
-                        //verseTextView.setTextColor(defaultTextColor);
-                    }
+
 
 
                     verseLayout.addView(verseTextView);
@@ -499,73 +519,8 @@ public class BibleFragment extends Fragment{
 
     }
 
-
-
-    public void nonESVPrintText(JSONObject datas) throws JSONException {
-        JSONArray content = datas.getJSONObject("data").getJSONArray("content");
-        String pastetext = "";
-        String reference = datas.getJSONObject("data").getString("reference");
-        String html = "<h2>" + reference + "</h2><br>";
-        for (int i = 0; i < content.length(); i++) {
-            JSONArray items = content.getJSONObject(i).getJSONArray("items");
-            for (int j = 0; j < items.length(); j++) {
-                JSONObject item = items.getJSONObject(j);
-                if (item.getString("type").equals("tag") && item.getString("name").equals("verse")) {
-                    html += "<span>" + pastetext + "</span>";
-                    pastetext = "";
-                }
-                if (item.getString("type").equals("text")) {
-                    pastetext += item.getString("text");
-                } else {
-                    JSONArray subItems = item.getJSONArray("items");
-                    for (int k = 0; k < subItems.length(); k++) {
-                        JSONObject subItem = subItems.getJSONObject(k);
-                        if (item.getString("name").equals("verse")) {
-                            pastetext += "<b>" + subItem.getString("text") + "</b> ";
-                        } else {
-                            pastetext += subItem.getString("text");
-                        }
-                    }
-                }
-            }
-        }
-        html += "<span>" + pastetext + "</span>";
-        System.out.println(html);
-        // Add code to display the HTML on a webpage or save it to a file
-    }
-
-    public String parseRef(String ref) {
-        Map<String, String> bookMap = new HashMap<String, String>();
-        bookMap.put("Genesis", "GEN");
-        bookMap.put("Exodus", "EXO");
-        bookMap.put("Leviticus", "LEV");
-        String nums = "1234567890";
-        ref = ref.replace(":", ".");
-        String[] myArray = ref.split("%20");
-        //System.out.println(ref);
-        //System.out.println(Arrays.toString(myArray));
-        if (myArray.length == 1) {
-            return ref;
-        } else {
-            String toReturn;
-            int i;
-            if (nums.indexOf(myArray[0]) == -1) {
-                toReturn = bookMap.get(myArray[0]);
-                i = 1;
-            } else {
-                toReturn = bookMap.get(myArray[0] + " " + myArray[1]);
-                i = 2;
-            }
-            for (; i < myArray.length; i++) {
-                toReturn += ("." + myArray[i]);
-            }
-            System.out.println(toReturn);
-            return toReturn;
-        }
-    }
-
     public void highlight(TextView verseTextView){
-        String chapterRef = book_ref + chapter_ref;
+        String chapterRef = dbchapter_ref;
         verseTextView.setBackgroundColor(Color.YELLOW);
         DatabaseReference highlightsRef = FirebaseDatabase.getInstance().getReference("highlights");
         String userId = FirebaseAuth.getInstance().getUid();
@@ -575,29 +530,21 @@ public class BibleFragment extends Fragment{
         highlightsRef.child(userId).child(chapterRef).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                boolean hasHighlights = true;
-                if(!snapshot.child("hasHighlights").exists()){
-                    hasHighlights = false;
-                }
-                if (hasHighlights) {
-                    // Check if the verse has already been highlighted
-                    for (DataSnapshot highlightSnapshot : snapshot.getChildren()) {
-                        Highlight highlight = highlightSnapshot.child("highlights").getValue(Highlight.class);
-                        if (highlight.getVerse().equals(verseTextView.getTag().toString())) {
-                            // The verse has already been highlighted, update the color
-                            String highlightId = highlightSnapshot.getKey();
-                            Highlight updatedHighlight = new Highlight(highlight.getVerse(), Color.YELLOW, highlightId);
-                            highlightsRef.child(userId).child(chapterRef).child(highlightId).setValue(updatedHighlight);
-                            return;
-                        }
+                for (DataSnapshot highlightSnapshot : snapshot.getChildren()) {
+                    Highlight highlight = highlightSnapshot.getValue(Highlight.class);
+                    if (highlight.getVerse().equals(verseTextView.getTag().toString())) {
+                        // The verse has already been highlighted, delete the highlight
+                        String highlightId = highlightSnapshot.getKey();
+                        highlightsRef.child(userId).child(chapterRef).child(highlightId).removeValue();
+                        verseTextView.setBackgroundColor(Color.TRANSPARENT);
+                        return;
                     }
                 }
 
                 // The verse hasn't been highlighted yet, create a new highlight object and store it in the database
                 String highlightId = highlightsRef.child(userId).child(chapterRef).push().getKey();
                 Highlight highlight = new Highlight(verseTextView.getTag().toString(), Color.YELLOW, highlightId);
-                highlightsRef.child(userId).child(chapterRef).child("hightlights").setValue(highlight);
-                highlightsRef.child(userId).child(chapterRef).child("hasHighlights").setValue(true);
+                highlightsRef.child(userId).child(chapterRef).child(highlightId).setValue(highlight);
             }
 
             @Override
@@ -607,35 +554,43 @@ public class BibleFragment extends Fragment{
         });
     }
 
-    public Map<String,Integer> retrieveHighlights(String chapterRef){
-        Map<String,Integer> highlights = new HashMap<String,Integer>();
-        DatabaseReference highlightsRef = FirebaseDatabase.getInstance().getReference("highlights");
-        Query query = highlightsRef.child(FirebaseAuth.getInstance().getUid()).orderByKey().equalTo(chapterRef);
-        query.addValueEventListener(new ValueEventListener() {
+    public void retrieveHighlights(String chapterRef,OnHighlightsRetrievedListener listener){
+        System.out.println("Initializing Map");
+
+        DatabaseReference highlightsRef = FirebaseDatabase.getInstance().getReference("highlights").child(FirebaseAuth.getInstance().getUid())
+                .child(chapterRef);
+        //Query query = highlightsRef.child(FirebaseAuth.getInstance().getUid()).orderByKey().equalTo(chapterRef);
+        highlightsRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot highlightSnapshot : dataSnapshot.getChildren()) {
-                    boolean hasHighlights = true;
-                    if(!highlightSnapshot.child("hasHighlights").exists()){
-                        hasHighlights = false;
-                    }
-                    if (hasHighlights) {
-                        for (DataSnapshot childSnapshot : highlightSnapshot.getChildren()) {
-                            if (!childSnapshot.getKey().equals("hasHighlights")) {
-                                Highlight highlight = childSnapshot.child("highlights").getValue(Highlight.class);
-                                highlights.put(highlight.getVerse(),highlight.getColor());
-                            }
-                        }
-                    }
+            public void onDataChange(DataSnapshot snapshot) {
+                Map<String,Integer> highlights = new HashMap<String,Integer>();
+                System.out.println("HELLO");
+                List<String> highlightIds = new ArrayList<>();
+                for (DataSnapshot child : snapshot.getChildren()) {
+                    String highlightId = child.getKey();
+                    highlightIds.add(highlightId);
                 }
+                if(highlightIds.isEmpty()){
+                    System.out.println("No Highlights");
+                    listener.onHighlightsRetrieved(Collections.emptyMap());
+                }
+                for(String id : highlightIds){
+                    Highlight highlight = snapshot.child(id).getValue(Highlight.class);
+                    System.out.println("putting into map");
+                    highlights.put(highlight.getVerse(), highlight.getColor());
+                }
+                listener.onHighlightsRetrieved(highlights);
+
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Handle errors
             }
         });
-
-        return highlights;
+    }
+    public interface OnHighlightsRetrievedListener {
+        void onHighlightsRetrieved(Map<String,Integer> highlights);
     }
 }
+
 
