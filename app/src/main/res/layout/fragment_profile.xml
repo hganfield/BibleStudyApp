@@ -1,67 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/Theme.BibleStudyApp.NoActionBar"
-    tools:context=".ProfileFragment">
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".CreateAccount">
 
     <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="137dp"
-        android:layout_height="120dp"
-        android:layout_marginStart="124dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.139"
-        app:srcCompat="@drawable/common_google_signin_btn_icon_dark" />
+        android:id="@+id/profile_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_launcher_foreground"
+        />
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="78dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="59dp"
-        android:layout_marginEnd="44dp"
-        android:layout_marginBottom="1dp"
-        android:text="UserName: "
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/realUsername"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="79dp"
+        android:layout_width="143dp"
         android:layout_height="21dp"
-        android:layout_marginStart="59dp"
-        android:text="Email: "
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.107" />
+        android:layout_row="0"
+        android:layout_column="0"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="30dp"
+        android:text="UserName: " />
 
     <TextView
         android:id="@+id/realUsername"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
-        app:layout_constraintVertical_bias="0.307" />
+        android:layout_width="179dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="143dp"
+        android:layout_height="21dp"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="30dp"
+        android:text="Email: " />
 
     <TextView
         android:id="@+id/realEmail"
+        android:layout_width="176dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="143dp"
+        android:layout_height="21dp"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="30dp"
+        android:text="Number:" />
+
+    <TextView
+        android:id="@+id/realPhone"
+        android:layout_width="175dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="143dp"
+        android:layout_height="21dp"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="30dp"
+        android:text="Journals:" />
+
+    <Button
+        android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="172dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/realUsername"
-        app:layout_constraintVertical_bias="0.109" />
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:text="Journals" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>
+

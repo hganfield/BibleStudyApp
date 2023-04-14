@@ -45,7 +45,7 @@
         android:layout_marginRight="30dp"
         android:ems="10"
         android:hint="Phone Number"
-        android:inputType="textPassword" />
+        android:inputType="text" />
 
     <Button
         android:id="@+id/CreateAccount"
