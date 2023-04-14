@@ -1,92 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AccountPage">
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="137dp"
-        android:layout_height="120dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/common_google_signin_btn_icon_dark"
-        tools:layout_editor_absoluteX="134dp" />
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".CreateAccount">
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="78dp"
-        android:layout_height="24dp"
-        android:text="UserName: "
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.314"
-        tools:layout_editor_absoluteX="59dp" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="79dp"
+        android:layout_width="143dp"
         android:layout_height="21dp"
-        android:text="Email: "
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.107"
-        tools:layout_editor_absoluteX="59dp" />
+        android:layout_row="0"
+        android:layout_column="0"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:text="UserName: " />
 
     <TextView
         android:id="@+id/realUsername"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
-        app:layout_constraintVertical_bias="0.179"
-        tools:layout_editor_absoluteX="176dp" />
+        android:layout_width="143dp"
+        android:layout_height="21dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:text="TextView" />
 
     <TextView
+        android:id="@+id/textView2"
+        android:layout_width="143dp"
+        android:layout_height="21dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:text="Email: " />
+
+    <TextView
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:id="@+id/realEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/realUsername"
-        app:layout_constraintVertical_bias="0.107"
-        tools:layout_editor_absoluteX="176dp" />
+        android:layout_width="143dp"
+        android:layout_height="21dp"
+        android:text="TextView" />
 
     <TextView
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:id="@+id/textView3"
-        android:layout_width="75dp"
-        android:layout_height="24dp"
-        android:text="Number:"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
-        app:layout_constraintVertical_bias="0.115"
-        tools:layout_editor_absoluteX="59dp" />
+        android:layout_width="143dp"
+        android:layout_height="21dp"
+        android:text="Number:"/>
 
     <TextView
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:id="@+id/realPhone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="176dp"
-        tools:layout_editor_absoluteY="362dp" />
+        android:layout_width="143dp"
+        android:layout_height="21dp"
+        android:text="TextView" />
 
     <TextView
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Journals:"
-        tools:layout_editor_absoluteX="59dp"
-        tools:layout_editor_absoluteY="425dp" />
+        android:layout_width="143dp"
+        android:layout_height="21dp"
+        android:text="Journals:" />
 
     <Button
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Journals"
-        tools:layout_editor_absoluteX="162dp"
-        tools:layout_editor_absoluteY="409dp" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:text="Journals" />
+
+
+</LinearLayout>
+
