@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -65,11 +66,16 @@ public class ProfileFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
     private TextView name;
 
     private TextView email;
 
+    private TextView number;
+
+    private ImageView pp;
     FirebaseUser currentUser;
 
     private DatabaseReference reference;
@@ -90,6 +96,8 @@ public class ProfileFragment extends Fragment {
                     name.setText(user.getUsername());
                     email = view.findViewById(R.id.realEmail);
                     email.setText(user.getEmail());
+                    number = view.findViewById(R.id.realPhone);
+                    number.setText(user.getPhoneNumber());
                 }
 
                 @Override
