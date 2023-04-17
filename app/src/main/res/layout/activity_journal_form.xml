@@ -5,4 +5,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".JournalForm">
+
+    <EditText
+        android:id="@+id/editTextTextPersonName2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Title"
+        tools:layout_editor_absoluteX="14dp"
+        tools:layout_editor_absoluteY="129dp" />
+
+    <EditText
+        android:id="@+id/editTextTextPersonName3"
+        android:layout_width="382dp"
+        android:layout_height="487dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Write your thoughts..."
+        tools:layout_editor_absoluteX="14dp"
+        tools:layout_editor_absoluteY="174dp" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="377dp"
+        android:layout_height="97dp"
+        android:text="verses"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="17dp" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="submit"
+        tools:layout_editor_absoluteX="296dp"
+        tools:layout_editor_absoluteY="678dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
