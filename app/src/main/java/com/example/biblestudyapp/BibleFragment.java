@@ -2,8 +2,10 @@ package com.example.biblestudyapp;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -483,8 +485,7 @@ public class BibleFragment extends Fragment{
                             builder.setPositiveButton("Journal", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    // Handle journal button click
-                                    // Show a journal entry screen or do something else
+                                    journal(verseTextView);
                                 }
                             });
 
@@ -516,6 +517,23 @@ public class BibleFragment extends Fragment{
                 //Toast.makeText(context, "Error retrieving chapter", Toast.LENGTH_SHORT).show();
             }
         }
+
+    }
+
+    public void journal(TextView verseTextView){
+        DatabaseReference journalsRef = FirebaseDatabase.getInstance().getReference("journals");
+        String userId = FirebaseAuth.getInstance().getUid();
+        Activity activity = getActivity();
+        if(activity != null){
+            Intent intent = new Intent(activity, JournalForm.class);
+            intent.putExtra("chapter_ref",dbchapter_ref);
+            startActivity(intent);
+        }
+        else{
+            System.out.println("Problem");
+        }
+
+
 
     }
 

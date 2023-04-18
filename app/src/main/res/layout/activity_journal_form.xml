@@ -1,44 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
     tools:context=".JournalForm">
 
-    <EditText
-        android:id="@+id/editTextTextPersonName2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Title"
-        tools:layout_editor_absoluteX="14dp"
-        tools:layout_editor_absoluteY="129dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="1dp"
+            android:clickable="true"
+            android:contentDescription="backbutton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_backbutton_foreground" />
+
+        <TextView
+            android:id="@+id/ChapterVerseReference"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:hint="verses"
+            android:textAlignment="center"
+            android:textSize="34sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </LinearLayout>
 
     <EditText
-        android:id="@+id/editTextTextPersonName3"
-        android:layout_width="382dp"
-        android:layout_height="487dp"
+        android:id="@+id/JournalTitle"
+        android:layout_width="224dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="156dp"
         android:ems="10"
+        android:hint="Title"
         android:inputType="textPersonName"
-        android:text="Write your thoughts..."
-        tools:layout_editor_absoluteX="14dp"
-        tools:layout_editor_absoluteY="174dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ChapterVerseReference" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="377dp"
-        android:layout_height="97dp"
-        android:text="verses"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="17dp" />
+    <EditText
+        android:id="@+id/JournalText"
+        android:layout_width="331dp"
+        android:layout_height="363dp"
+        android:layout_marginEnd="48dp"
+        android:ems="10"
+        android:hint="Write your thoughts..."
+        android:inputType="textMultiLine"
+        android:singleLine="false"
+        android:textAlignment="viewStart"
+        android:maxLines="15"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/JournalTitle" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/JournalSubmit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="180dp"
         android:text="submit"
-        tools:layout_editor_absoluteX="296dp"
-        tools:layout_editor_absoluteY="678dp" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/JournalText" />
+
+</LinearLayout>
