@@ -42,7 +42,7 @@ public class User {
         profile_picture = null;
     }
 
-    public Drawable getProfile_picture() { return profile_picture.getDrawable(); }
+
     public String getPhoneNumber(){
         return phoneNumber;
     }
