@@ -18,7 +18,7 @@ public class Journal {
     private String ref;
 
     //TODO: add time/clock and verse to the constructor;
-    public Journal(String title, String author,String ref,Date created_date) {
+    public Journal(String title, String author,String ref, Date created_date) {
         this.created_date = created_date;
         this.title = title;
         this.author = author;
