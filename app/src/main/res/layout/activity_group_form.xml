@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/form"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     tools:context=".GroupForm">
 
     <!-- TODO: Update blank fragment layout -->
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
@@ -23,47 +20,42 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
         <com.google.android.material.textfield.TextInputLayout
+
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="Group Name">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/group_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="hint" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Switch
             android:id="@+id/publicGroup"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:text="Make Public"
+            android:text="Make Private"
             android:textSize="16sp" />
 
         <com.google.android.material.textfield.TextInputLayout
+
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:hint="Password">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/password"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="hint" />
+                 />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/createGroup"
+            android:id="@+id/addMembers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Create Group" />
-    </LinearLayout>
+            android:text="Add Members" />
 
-</FrameLayout>
+</LinearLayout>

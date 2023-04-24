@@ -20,6 +20,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import java.util.function.ToDoubleBiFunction;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link HomeFragment#newInstance} factory method to
@@ -80,8 +82,9 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         TextView text = (TextView) view.findViewById(R.id.verse);
-        text.setText("John 3:16 For God so loved the world that He gave his one and only Son, that whoever believes in him shall not perish" +
-                "but have eternal life");
+        //TODO implement the random generator. Will hopefully be able to make what is in bible fragment its own class so it can be referenced
+        //RandomVerseGenerator random = new RandomVerseGenerator();
+        //text.setText(random.generateRandomVerse());
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance().getReference();

@@ -110,17 +110,19 @@ public class BibleFragment extends Fragment{
 
     private static Map<String, String> bibleIds;
 
-    public static Map<String, String> bookMap;
+    private static Map<String, String> bookMap;
 
-    public static Map<String, Integer> bookChapterMap;
+    private static Map<String, Integer> bookChapterMap;
 
-    public static String book_ref;
+    private static String book_ref;
 
-    public static String chapter_ref;
+    private static String chapter_ref;
 
-    public static String dbchapter_ref;
+    private static String dbchapter_ref;
 
-    public static String reference;
+    private static String reference;
+
+    private static String book;
 
     private DatabaseReference mDatabase;
 
@@ -305,7 +307,7 @@ public class BibleFragment extends Fragment{
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 chapter_selection.setVisibility(view.VISIBLE);
-                String book = adapterView.getItemAtPosition(i).toString();
+                book = adapterView.getItemAtPosition(i).toString();
                 book_ref = bookMap.get(book);
                 System.out.println(book_ref);
                 int number_of_books = bookChapterMap.get(book);
@@ -395,6 +397,7 @@ public class BibleFragment extends Fragment{
 
             try {
                 URL obj = new URL(url);
+                System.out.println(url);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                 con.setRequestMethod("GET");
                 con.setRequestProperty("api-key", apikey);
@@ -526,7 +529,10 @@ public class BibleFragment extends Fragment{
         Activity activity = getActivity();
         if(activity != null){
             Intent intent = new Intent(activity, JournalForm.class);
-            intent.putExtra("chapter_ref",dbchapter_ref);
+            String verse = verseTextView.getTag().toString();
+            intent.putExtra("chapter_ref",book+" "+chapter_ref+":"+verse);
+            intent.putExtra("db_ref",dbchapter_ref);
+            intent.putExtra("verse",verse);
             startActivity(intent);
         }
         else{

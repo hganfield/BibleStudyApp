@@ -1,9 +1,6 @@
 package com.example.biblestudyapp;
 
-import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
-
-import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +15,6 @@ public class User {
     private List<Group> groups;
 
     private ImageView profile_picture;
-    private DatabaseReference mDatabase;
 
     public User(){
 
@@ -42,7 +38,7 @@ public class User {
         profile_picture = null;
     }
 
-    public Drawable getProfile_picture() { return profile_picture.getDrawable(); }
+    //public Drawable getProfile_picture() { return profile_picture.getDrawable(); }
     public String getPhoneNumber(){
         return phoneNumber;
     }
@@ -65,11 +61,26 @@ public class User {
     public String getUsername() {
         return username;
     }
-    public void newGroup(Group group){
+    public void addGroup(Group group){
         if(this.groups == null){
             this.groups = new ArrayList<Group>();
         }
         this.groups.add(group);
 
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(o == null){
+            return false;
+        }
+        if(o.getClass() != this.getClass()){
+            return false;
+        }
+        final User other = (User) o;
+        if(other.getUid() != this.getUid()){
+            return false;
+        }
+        return true;
     }
 }

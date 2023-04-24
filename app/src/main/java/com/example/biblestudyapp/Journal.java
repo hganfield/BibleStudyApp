@@ -15,19 +15,19 @@ public class Journal {
 
     private String text;
 
-    private String ref;
+    private String verse;
 
     //TODO: add time/clock and verse to the constructor;
-    public Journal(String title, String author,String ref,Date created_date) {
+    public Journal(String title, String author,String verse,Date created_date) {
         this.created_date = created_date;
         this.title = title;
         this.author = author;
-        this.ref = ref;
+        this.verse = verse;
     }
 
-    public String getRef(){return ref;}
+    public String getVerse(){return verse;}
 
-    public void setRef(String reference){ref = reference;}
+    public void setVerse(String reference){verse = reference;}
     public Date getDate(){return created_date;}
 
     public void setDate(Date time){ created_date = time;}
@@ -36,6 +36,8 @@ public class Journal {
     public void setTitle(String titleText) {title = titleText;}
 
     public String getAuthor() {return author;}
+
+    public void setAuthor(String id){author = id;}
 
     public String getJournalText() { return text;}
 

@@ -8,9 +8,12 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,8 +25,14 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -87,8 +96,15 @@ public class GroupFragment extends Fragment {
         ((HomePage) getActivity()).setActionBarVisible(false);
     }
 
-    FirebaseUser user;
-    DatabaseReference database;
+    private FirebaseUser user;
+    private DatabaseReference groupDatabase;
+
+    private List<Group> groupList;
+
+    private RecyclerView recyclerView;
+
+    private GroupAdapter groupAdapter;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -97,11 +113,43 @@ public class GroupFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_group, container, false);
         Button create = (Button) view.findViewById(R.id.Cbutton1);
         user = FirebaseAuth.getInstance().getCurrentUser();
-        database = FirebaseDatabase.getInstance().getReference();
+        groupDatabase = FirebaseDatabase.getInstance().getReference("users");
+        groupList = new ArrayList<Group>();
+        groupDatabase.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                System.out.println("Setting groupList");
+                //String groupId = FirebaseDatabase.getInstance().getReference("groups").child()
+                groupList = user.getGroups();
+                if(groupList == null || groupList.isEmpty()){
+                    System.out.println("Group List is empty");
+                }
+                else {
+                    System.out.println("Here");
+                    for(Group a : groupList){
+                        System.out.println(a.getGroupName());
+                    }
+                    recyclerView = view.findViewById(R.id.journal_list);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    groupAdapter = new GroupAdapter(groupList, new GroupAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(int position) {
+                            System.out.println("Clicked");
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(),GroupForm.class);
+                Intent intent = new Intent(getActivity(), GroupForm.class);
                 startActivity(intent);
             }
         });
