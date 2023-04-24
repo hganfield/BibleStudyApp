@@ -1,6 +1,7 @@
 package com.example.biblestudyapp;
 
-import java.time.Clock;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class PrayerRequest {
 
@@ -10,13 +11,18 @@ public class PrayerRequest {
 
     private Group group;
 
-    // TODO: time it was made
-   //  private final Clock dateTime;
+
+    private LocalTime time;
+
+    private LocalDate date;
 
     public PrayerRequest(String text, User requestor, Group group) {
         this.text = text;
         this.requestor = requestor;
         this.group = group;
+        this.time = LocalTime.now();
+        this.date = LocalDate.now();
+
     }
 
     public String getText() {
@@ -42,5 +48,18 @@ public class PrayerRequest {
     public void setGroup(Group group) {
         this.group = group;
     }
+
+    public LocalDate getDate() { return date;}
+
+    /**
+     *  when update the content of the prayer request, use this method to update
+     *  the new date and time for the revised version of the object
+     */
+    public void updateDateTime() {
+        date = LocalDate.now();
+        time = LocalTime.now();
+    }
+
+    public LocalTime getTime() {return time;}
 
 }

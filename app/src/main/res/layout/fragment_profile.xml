@@ -25,13 +25,15 @@
         android:layout_marginRight="30dp"
         android:text="UserName: " />
 
-    <TextView
+    <EditText
         android:id="@+id/realUsername"
         android:layout_width="179dp"
         android:layout_height="50dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:text="TextView" />
+
+        android:hint="TextView"
+        android:inputType="text"/>
 
     <TextView
         android:id="@+id/textView2"
@@ -41,13 +43,14 @@
         android:layout_marginRight="30dp"
         android:text="Email: " />
 
-    <TextView
+    <EditText
         android:id="@+id/realEmail"
         android:layout_width="176dp"
         android:layout_height="50dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:text="TextView" />
+        android:hint="TextView"
+        android:inputType="text"/>
 
     <TextView
         android:id="@+id/textView3"
@@ -57,13 +60,14 @@
         android:layout_marginRight="30dp"
         android:text="Number:" />
 
-    <TextView
+    <EditText
         android:id="@+id/realPhone"
         android:layout_width="175dp"
         android:layout_height="50dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:text="TextView" />
+        android:hint="TextView"
+        android:inputType="text" />
 
     <TextView
         android:id="@+id/textView5"
@@ -80,6 +84,12 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:text="Journals" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save" />
 
 
 </LinearLayout>
