@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".PrayerRequestFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="1dp"
+            android:clickable="true"
+            android:contentDescription="backbutton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_backbutton_foreground" />
+
+
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/PrayerRequestTitle"
+        android:layout_width="224dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="156dp"
+        android:ems="10"
+        android:hint="Title"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf= "parent" />
+
+
+    <EditText
+        android:id="@+id/PrayerRequestText"
+        android:layout_width="331dp"
+        android:layout_height="363dp"
+        android:layout_marginEnd="48dp"
+        android:ems="10"
+        android:hint="Share your prayers..."
+        android:inputType="textMultiLine"
+        android:singleLine="false"
+        android:textAlignment="viewStart"
+        android:maxLines="15"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/PrayerRequestTitle" />
+
+    <Button
+        android:id="@+id/PrayerSubmit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="180dp"
+        android:text="submit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/PrayerRequestText" />
+
+</LinearLayout>
+
