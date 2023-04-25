@@ -81,7 +81,6 @@ public class InviteUsersFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActivity().setContentView(R.layout.fragment_invite_users);
         setHasOptionsMenu(true);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -107,13 +106,13 @@ public class InviteUsersFragment extends Fragment {
     private SharedViewModel sharedViewModel;
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         context = this.getContext();
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_invite_users, container, false);
-
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
         sharedViewModel.printList();
 
@@ -126,26 +125,50 @@ public class InviteUsersFragment extends Fragment {
         createGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<User> groupList = sharedViewModel.getUserList().getValue();
-                if(groupList == null ||groupList.isEmpty()){
-                }
-                else{
-                    Bundle bundle = new Bundle();
-                    String g_name = bundle.getString("name");
-                    boolean privatebool = bundle.getBoolean("private");
-                    String groupId = group_ref.push().getKey();
-                    if(privatebool){
-                        String password = bundle.getString("password");
-                        Group group = new Group(groupList,g_name,groupId,privatebool,password);
-                    }
-                    Group group = new Group(groupList,g_name,groupId,privatebool);
-                    group_ref.child(groupId).setValue(group);
-                    for(User u : groupList){
-                        u.addGroup(group);
-                    }
-                    getActivity().finish();
+                List<User> userList = sharedViewModel.getUserList().getValue();
+                List<String> groupList = new ArrayList<>();
+                //System.out.println(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                FirebaseDatabase.getInstance().getReference("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        userList.add(snapshot.getValue(User.class));
+                        String groupId = group_ref.push().getKey();
+                        for(User u : userList){
+                            groupList.add(u.getUid());
+                            u.addGroup(groupId);
+                            u.updateDB();
+                        }
+                        if(groupList == null ||groupList.isEmpty() || groupList.size() == 1){
+                        }
+                        else{
+                            Bundle bundle = getArguments();
+                            String g_name = bundle.getString("name");
+                            boolean privatebool = bundle.getBoolean("private");
+                            Group group;
+                            if(privatebool){
+                                String password = bundle.getString("password");
+                                group = new Group(groupList,g_name,groupId,privatebool,password);
+                            }
+                            else {
+                                group = new Group(groupList, g_name, groupId, privatebool);
+                            }
+                            group_ref.child(groupId).setValue(group);
+                            GroupFragment groupFragment = (GroupFragment) getActivity().getSupportFragmentManager().findFragmentByTag("GroupFragment");
+                            if (groupFragment != null) {
+                                groupFragment.updateAdapter(groupId);
+                            }
+                            getActivity().finish();
 
-                }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
 
 
             }
@@ -195,7 +218,7 @@ public class InviteUsersFragment extends Fragment {
                         receiverFragment.setArguments(bundle);
                         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.InviteUsers, receiverFragment);
+                        fragmentTransaction.replace(R.id.group_container, receiverFragment);
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
 

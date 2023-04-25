@@ -78,7 +78,7 @@ public class LoginPage extends AppCompatActivity {
             *  The login button and what is does when clicked
              */
             public void onClick(View view) {
-                auth.signInWithEmailAndPassword("mmark9293@gmail.com","123456").addOnCompleteListener(LoginPage.this, new OnCompleteListener<AuthResult>() {
+                auth.signInWithEmailAndPassword(Email.getText().toString(),Password.getText().toString()).addOnCompleteListener(LoginPage.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {

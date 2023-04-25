@@ -8,15 +8,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.List;
 
 public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHolder> {
 
-    private List<Group> groupList;
+    private List<String> groupList;
 
     private OnItemClickListener listener;
 
-    public GroupAdapter(List<Group> groupList,OnItemClickListener listener){
+    public GroupAdapter(List<String> groupList,OnItemClickListener listener){
         this.groupList = groupList;
         this.listener = listener;
     }
@@ -35,8 +40,18 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
 
     @Override
     public void onBindViewHolder(@NonNull GroupAdapter.GroupViewHolder holder, int position) {
-        Group group = groupList.get(position);
-        holder.titleTextView.setText(group.getGroupName());
+        String groupId = groupList.get(position);
+        Group.getGroup(groupId, new Group.OnGroupRetrievedListener() {
+            @Override
+            public void onGroupRetrieved(Group group) {
+                if (group != null) {
+                    holder.nameTextView.setText(group.getGroupName());
+                } else {
+                    holder.nameTextView.setText("Group not found");
+                }
+            }
+        });
+
     }
 
     @Override
@@ -49,13 +64,13 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
 
 
     public class GroupViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView titleTextView;
+        public TextView nameTextView;
         public TextView verseTextView;
         public TextView dateTextView;
 
         public GroupViewHolder(@NonNull View itemView) {
             super(itemView);
-            titleTextView = itemView.findViewById(R.id.group_title);
+            nameTextView = itemView.findViewById(R.id.group_title);
             itemView.setOnClickListener(this);
             //verseTextView = itemView.findViewById(R.id.verseTextView);
             //dateTextView = itemView.findViewById(R.id.dateTextView);

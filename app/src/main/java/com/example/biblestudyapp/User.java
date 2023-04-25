@@ -1,6 +1,9 @@
 package com.example.biblestudyapp;
 
+import android.util.Log;
 import android.widget.ImageView;
+
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +15,7 @@ public class User {
 
     private List<Journal> journalList;
     private String phoneNumber;
-    private List<Group> groups;
+    private List<String> groups;
 
     private ImageView profile_picture;
 
@@ -25,10 +28,10 @@ public class User {
         this.email = email;
         this.phoneNumber = phoneNumber;
         journalList = new ArrayList<Journal>();
-        groups = new ArrayList<Group>();
+        groups = new ArrayList<String>();
         profile_picture = null;
     }
-    public User(String uid, String username, String email, String phoneNumber, ArrayList<Group> groups){
+    public User(String uid, String username, String email, String phoneNumber, ArrayList<String> groups){
         this.uid = uid;
         this.username = username;
         this.email = email;
@@ -38,6 +41,8 @@ public class User {
         profile_picture = null;
     }
 
+
+    public void setProfile_picture(ImageView image){this.profile_picture = image;}
     //public Drawable getProfile_picture() { return profile_picture.getDrawable(); }
     public String getPhoneNumber(){
         return phoneNumber;
@@ -50,7 +55,7 @@ public class User {
         return uid;
     }
 
-    public List<Group> getGroups() {
+    public List<String> getGroups() {
         return groups;
     }
 
@@ -61,12 +66,21 @@ public class User {
     public String getUsername() {
         return username;
     }
-    public void addGroup(Group group){
+    public void addGroup(String group){
         if(this.groups == null){
-            this.groups = new ArrayList<Group>();
+            this.groups = new ArrayList<String>();
         }
         this.groups.add(group);
 
+    }
+
+    public void updateDB(){
+        try {
+            FirebaseDatabase.getInstance().getReference("users").child(this.getUid()).setValue(this);
+        } catch (Exception e) {
+            Log.e("Update DB error", e.getMessage());
+        }
+        //FirebaseDatabase.getInstance().getReference("users").child(this.getUid()).setValue(this);
     }
 
     @Override
@@ -83,4 +97,5 @@ public class User {
         }
         return true;
     }
+
 }

@@ -99,11 +99,12 @@ public class GroupFragment extends Fragment {
     private FirebaseUser user;
     private DatabaseReference groupDatabase;
 
-    private List<Group> groupList;
+    private List<String> groupList;
 
     private RecyclerView recyclerView;
 
     private GroupAdapter groupAdapter;
+
 
 
     @Override
@@ -114,7 +115,7 @@ public class GroupFragment extends Fragment {
         Button create = (Button) view.findViewById(R.id.Cbutton1);
         user = FirebaseAuth.getInstance().getCurrentUser();
         groupDatabase = FirebaseDatabase.getInstance().getReference("users");
-        groupList = new ArrayList<Group>();
+        groupList = new ArrayList<String>();
         groupDatabase.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -127,8 +128,8 @@ public class GroupFragment extends Fragment {
                 }
                 else {
                     System.out.println("Here");
-                    for(Group a : groupList){
-                        System.out.println(a.getGroupName());
+                    for(String s : groupList){
+                        System.out.println(s);
                     }
                     recyclerView = view.findViewById(R.id.journal_list);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -138,6 +139,7 @@ public class GroupFragment extends Fragment {
                             System.out.println("Clicked");
                         }
                     });
+                    recyclerView.setAdapter(groupAdapter);
                 }
             }
 
@@ -156,6 +158,11 @@ public class GroupFragment extends Fragment {
 
 
         return view;
+    }
+
+    public void updateAdapter(String id){
+        groupList.add(id);
+        groupAdapter.notifyDataSetChanged();
     }
 
 
