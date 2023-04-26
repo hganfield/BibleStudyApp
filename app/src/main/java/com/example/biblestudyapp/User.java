@@ -3,6 +3,7 @@ package com.example.biblestudyapp;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.example.biblestudyapp.Journal.Journal;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;

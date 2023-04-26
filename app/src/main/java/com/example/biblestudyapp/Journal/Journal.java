@@ -1,4 +1,4 @@
-package com.example.biblestudyapp;
+package com.example.biblestudyapp.Journal;
 
 import java.util.Date;
 import java.util.List;
