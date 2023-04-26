@@ -476,7 +476,7 @@ public class BibleFragment extends Fragment{
                             AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
                             builder.setTitle("Select an action");
 
-                            builder.setPositiveButton("com/example/biblestudyapp/Journal", new DialogInterface.OnClickListener() {
+                            builder.setPositiveButton("Journal", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     journal(verseTextView);
