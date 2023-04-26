@@ -31,6 +31,22 @@ public class GroupFormFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    /*
+    The GroupName textbox the user types in
+     */
+    private TextInputEditText groupName;
+
+    /*
+    The option of private or public the user selects
+     */
+    private Switch isPrivate;
+
+    /*
+    The password textbox the user types in
+     */
+    private TextInputEditText password;
+
+
     public GroupFormFragment() {
         // Required empty public constructor
     }
@@ -62,22 +78,20 @@ public class GroupFormFragment extends Fragment {
         }
     }
 
-    private TextInputEditText groupName;
-
-    private Switch isPrivate;
-
-    private TextInputEditText password;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_group_form, container, false);
+
+        //Initializing all of the variables
         groupName = view.findViewById(R.id.group_name);
         password = view.findViewById(R.id.password);
         isPrivate = view.findViewById(R.id.publicGroup);
+        Button addMems = (Button) view.findViewById(R.id.addMembers);
 
+        //Checks to see if the switch has been changed if it has it will have an effect on if the password is visible or not
         isPrivate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -91,18 +105,15 @@ public class GroupFormFragment extends Fragment {
             }
         });
 
-        Button addMems = (Button) view.findViewById(R.id.addMembers);
         addMems.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: Take information from the fragment and store in database
+                //Retrieves Data from the textboxes
                 String name = groupName.getText().toString();
                 String passwordtxt = password.getText().toString();
                 boolean pbool = isPrivate.isChecked();
-                if(pbool){
-                    System.out.println("true");
-                }
 
+                //Error checking
                 if(name.equals("")){
                     Toast.makeText(getContext(), "Please Enter A Group Name",
                             Toast.LENGTH_SHORT).show();

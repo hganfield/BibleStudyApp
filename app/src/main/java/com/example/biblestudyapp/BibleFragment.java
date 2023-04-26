@@ -124,8 +124,7 @@ public class BibleFragment extends Fragment{
 
     private static String book;
 
-    private DatabaseReference mDatabase;
-
+    private String id;
 
 
     @Override
@@ -134,7 +133,13 @@ public class BibleFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_bible, container, false);
         String trans = "KJV";
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        Bundle bundle = getArguments();
+
+        try{
+            id = bundle.getString("id");
+        }catch(NullPointerException nullPointerException){
+            id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        }
 
         //System.out.println("BEFORECALL!!!!!");
 
@@ -525,7 +530,6 @@ public class BibleFragment extends Fragment{
 
     public void journal(TextView verseTextView){
         DatabaseReference journalsRef = FirebaseDatabase.getInstance().getReference("journals");
-        String userId = FirebaseAuth.getInstance().getUid();
         Activity activity = getActivity();
         if(activity != null){
             Intent intent = new Intent(activity, JournalForm.class);
@@ -547,11 +551,11 @@ public class BibleFragment extends Fragment{
         String chapterRef = dbchapter_ref;
         verseTextView.setBackgroundColor(Color.YELLOW);
         DatabaseReference highlightsRef = FirebaseDatabase.getInstance().getReference("highlights");
-        String userId = FirebaseAuth.getInstance().getUid();
+        //String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         //This might be in the wrong place
 
-        highlightsRef.child(userId).child(chapterRef).addListenerForSingleValueEvent(new ValueEventListener() {
+        highlightsRef.child(id).child(chapterRef).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot highlightSnapshot : snapshot.getChildren()) {
@@ -559,16 +563,16 @@ public class BibleFragment extends Fragment{
                     if (highlight.getVerse().equals(verseTextView.getTag().toString())) {
                         // The verse has already been highlighted, delete the highlight
                         String highlightId = highlightSnapshot.getKey();
-                        highlightsRef.child(userId).child(chapterRef).child(highlightId).removeValue();
+                        highlightsRef.child(id).child(chapterRef).child(highlightId).removeValue();
                         verseTextView.setBackgroundColor(Color.TRANSPARENT);
                         return;
                     }
                 }
 
                 // The verse hasn't been highlighted yet, create a new highlight object and store it in the database
-                String highlightId = highlightsRef.child(userId).child(chapterRef).push().getKey();
+                String highlightId = highlightsRef.child(id).child(chapterRef).push().getKey();
                 Highlight highlight = new Highlight(verseTextView.getTag().toString(), Color.YELLOW, highlightId);
-                highlightsRef.child(userId).child(chapterRef).child(highlightId).setValue(highlight);
+                highlightsRef.child(id).child(chapterRef).child(highlightId).setValue(highlight);
             }
 
             @Override
@@ -580,8 +584,9 @@ public class BibleFragment extends Fragment{
 
     public void retrieveHighlights(String chapterRef,OnHighlightsRetrievedListener listener){
         System.out.println("Initializing Map");
+        //String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        DatabaseReference highlightsRef = FirebaseDatabase.getInstance().getReference("highlights").child(FirebaseAuth.getInstance().getUid())
+        DatabaseReference highlightsRef = FirebaseDatabase.getInstance().getReference("highlights").child(id)
                 .child(chapterRef);
         //Query query = highlightsRef.child(FirebaseAuth.getInstance().getUid()).orderByKey().equalTo(chapterRef);
         highlightsRef.addValueEventListener(new ValueEventListener() {

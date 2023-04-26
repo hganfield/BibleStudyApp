@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -80,7 +81,7 @@ public class JournalFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_journal, container, false);
-        Button create = (Button) view.findViewById(R.id.floatingActionButton3);
+        FloatingActionButton create = (FloatingActionButton) view.findViewById(R.id.floatingActionButton3);
         user = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance().getReference();
         create.setOnClickListener(new View.OnClickListener() {
