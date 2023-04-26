@@ -1,5 +1,7 @@
 package com.example.biblestudyapp;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +23,11 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
 
     private OnItemClickListener listener;
 
-    public GroupAdapter(List<String> groupList,OnItemClickListener listener){
+    private Context context;
+
+    public GroupAdapter(List<String> groupList,Context context){
         this.groupList = groupList;
-        this.listener = listener;
+        this.context = context;
     }
 
     public interface OnItemClickListener {
@@ -46,6 +50,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
             public void onGroupRetrieved(Group group) {
                 if (group != null) {
                     holder.nameTextView.setText(group.getGroupName());
+                    holder.nameTextView.setTag(groupId);
                 } else {
                     holder.nameTextView.setText("Group not found");
                 }
@@ -65,25 +70,19 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
 
     public class GroupViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView nameTextView;
-        public TextView verseTextView;
-        public TextView dateTextView;
 
         public GroupViewHolder(@NonNull View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.group_title);
             itemView.setOnClickListener(this);
-            //verseTextView = itemView.findViewById(R.id.verseTextView);
-            //dateTextView = itemView.findViewById(R.id.dateTextView);
         }
 
         @Override
         public void onClick(View view) {
-                if (listener != null) {
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        listener.onItemClick(position);
-                    }
-                }
+            String groupId = nameTextView.getTag().toString();
+            Intent intent = new Intent(context,GroupHomePage.class);
+            intent.putExtra("group_page_id", groupId);
+            context.startActivity(intent);
         }
     }
 }

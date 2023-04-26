@@ -13,7 +13,11 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 
-
+/**
+ * GroupForm Activity
+ * This is the Activity that manages the process of creating a group
+ * The Activity will return with the user having created a new group
+ */
 public class GroupForm extends AppCompatActivity {
 
 
@@ -22,7 +26,7 @@ public class GroupForm extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_form);
 
-
+        //Setting the container to the first step in creating a group: The groupForm
         GroupFormFragment receiverFragment = new GroupFormFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.group_container, receiverFragment, null)
