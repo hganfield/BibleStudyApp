@@ -89,9 +89,11 @@ public class CreateAccount extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if(task.isSuccessful()){
                                   setResult(14);
-                                  User user = new User(FirebaseAuth.getInstance().getUid(),Username.getText().toString(),EmailText.getText().toString(), PhoneText.getText().toString(),new ArrayList<String>());
+                                  Intent intent;
+                                  intent = new Intent();
+                                  User user = new User(FirebaseAuth.getInstance().getUid(),Username.getText().toString(),EmailText.getText().toString(), PhoneText.getText().toString());
                                   mDatabase.child("users").child(FirebaseAuth.getInstance().getUid()).setValue(user);
-                                  mDatabase.child("users").child(FirebaseAuth.getInstance().getUid()).child("groups").setValue(new ArrayList<String>());
+                                  mDatabase.child("users").child(FirebaseAuth.getInstance().getUid()).child("groups").setValue(new ArrayList<Group>());
                                   finish();
 
                                 }
