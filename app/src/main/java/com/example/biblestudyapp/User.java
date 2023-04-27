@@ -13,15 +13,27 @@ public class User {
     private String username;
     private String email;
 
+    private String profilePicture;
+
     private List<Journal> journalList;
     private String phoneNumber;
     private List<Group> groups;
 
-    private ImageView profile_picture;
+   // private ImageView profile_picture;
     private DatabaseReference mDatabase;
 
     public User(){
 
+    }
+
+    public User(String uid, String username, String email, String phoneNumber, String profilePicture) {
+        this.uid = uid;
+        this.username = username;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.profilePicture = profilePicture;
+        journalList = new ArrayList<Journal>();
+        groups = new ArrayList<Group>();
     }
     public User(String uid, String username, String email, String phoneNumber){
         this.uid = uid;
@@ -30,7 +42,7 @@ public class User {
         this.phoneNumber = phoneNumber;
         journalList = new ArrayList<Journal>();
         groups = new ArrayList<Group>();
-        profile_picture = null;
+        profilePicture = "";
     }
     public User(String uid, String username, String email, String phoneNumber, ArrayList<Group> groups){
         this.uid = uid;
@@ -39,14 +51,22 @@ public class User {
         this.phoneNumber = phoneNumber;
         journalList = new ArrayList<Journal>();
         this.groups = groups;
-        profile_picture = null;
+        profilePicture = "";
     }
 
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
 
     public String getPhoneNumber(){
         return phoneNumber;
     }
-
+public void setPhoneNumber(String number) {this.phoneNumber = number;}
+    public void setUsername(String name) {this.username = name;}
     public List<Journal> getJournals() {
         return journalList;
     }
@@ -62,6 +82,9 @@ public class User {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
     public String getUsername() {
         return username;
     }
