@@ -81,6 +81,7 @@ public class HomePage extends AppCompatActivity {
         Fragment Fgroup = new GroupFragment();
         Fragment Fprofile = new ProfileFragment();
         Fragment Fhome = new HomeFragment();
+        Fragment FJournal = new JournalFragment();
 
         getSupportFragmentManager().beginTransaction().setReorderingAllowed(true)
                         .add(R.id.container,Fhome,null)
@@ -91,6 +92,13 @@ public class HomePage extends AppCompatActivity {
                 switch(item.getItemId()){
                     case(R.id.bible):
                         getSupportFragmentManager().beginTransaction().replace(R.id.container,Fbible)
+                                .setReorderingAllowed(true)
+                                .addToBackStack("name")
+                                .commit();
+                        return true;
+
+                    case(R.id.journal):
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container,FJournal)
                                 .setReorderingAllowed(true)
                                 .addToBackStack("name")
                                 .commit();

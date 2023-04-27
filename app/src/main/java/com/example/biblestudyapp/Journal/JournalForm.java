@@ -1,4 +1,4 @@
-package com.example.biblestudyapp;
+package com.example.biblestudyapp.Journal;
 
 import static android.content.ContentValues.TAG;
 
@@ -7,14 +7,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.biblestudyapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -35,16 +37,18 @@ public class JournalForm extends AppCompatActivity {
     private EditText journalText;
 
     private String ref;
+    private String verse;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_journal_form);
-
-        ref = getIntent().getStringExtra("chapter_ref");
+        verse = getIntent().getStringExtra("verse");
+        ref = getIntent().getStringExtra("db_ref");
+        String actual_ref = getIntent().getStringExtra("chapter_ref");
         verseReference = findViewById(R.id.ChapterVerseReference);
-        verseReference.setText(ref);
+        verseReference.setText(actual_ref);
         journalText = findViewById(R.id.JournalText);
         title = findViewById(R.id.JournalTitle);
 
@@ -76,6 +80,7 @@ public class JournalForm extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         save();
+                        finish();
                     }
                 });
 
@@ -99,7 +104,7 @@ public class JournalForm extends AppCompatActivity {
                 // The verse hasn't been journaled yet, create a new journal object and store it in the database
                 String journalId = journalref.child(userId).child(ref).push().getKey();
                 Date time = Calendar.getInstance().getTime();
-                Journal journal = new Journal(title.getText().toString(), userId,ref,time);
+                Journal journal = new Journal(title.getText().toString(), userId,verse,time);
                 journal.setJournalText(journalText.getText().toString());
                 journal.setTitle(title.getText().toString());
                 journalref.child(userId).child(ref);
