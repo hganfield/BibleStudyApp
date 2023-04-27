@@ -1,9 +1,17 @@
 package com.example.biblestudyapp;
 
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Journal {
+public class Journal extends AppCompatActivity {
 
     private String title;
 
@@ -31,7 +39,7 @@ public class Journal {
     public Date getDate(){return created_date;}
 
     public void setDate(Date time){ created_date = time;}
-    public String getTitle() {return title;}
+    public String getJournalTitle() {return title;}
 
     public void setTitle(String titleText) {title = titleText;}
 
@@ -43,8 +51,15 @@ public class Journal {
 
     public void setJournalText(String jText) {text = jText;}
 
+    ArrayList<String> journal = new ArrayList<>();
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_journal);
 
+        ListView listView = (ListView)findViewById(R.id.listView);
 
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, journal);
 
-
+    }
 }
