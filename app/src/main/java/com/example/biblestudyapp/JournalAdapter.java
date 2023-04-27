@@ -1,4 +1,4 @@
-package com.example.biblestudyapp.Journal;
+package com.example.biblestudyapp;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,11 +6,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.biblestudyapp.R;
 
 import java.util.List;
+
+/*public class JournalAdapter extends AppCompatActivity{
+    private
+}*/
 
 public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalViewHolder> {
 

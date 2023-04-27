@@ -1,10 +1,9 @@
 package com.example.biblestudyapp;
 
-import android.util.Log;
+import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
-import com.example.biblestudyapp.Journal.Journal;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,14 +13,27 @@ public class User {
     private String username;
     private String email;
 
+    private String profilePicture;
+
     private List<Journal> journalList;
     private String phoneNumber;
-    private List<String> groups;
+    private List<Group> groups;
 
-    private ImageView profile_picture;
+   // private ImageView profile_picture;
+    private DatabaseReference mDatabase;
 
     public User(){
 
+    }
+
+    public User(String uid, String username, String email, String phoneNumber, String profilePicture) {
+        this.uid = uid;
+        this.username = username;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.profilePicture = profilePicture;
+        journalList = new ArrayList<Journal>();
+        groups = new ArrayList<Group>();
     }
     public User(String uid, String username, String email, String phoneNumber){
         this.uid = uid;
@@ -29,26 +41,32 @@ public class User {
         this.email = email;
         this.phoneNumber = phoneNumber;
         journalList = new ArrayList<Journal>();
-        groups = new ArrayList<String>();
-        profile_picture = null;
+        groups = new ArrayList<Group>();
+        profilePicture = "";
     }
-    public User(String uid, String username, String email, String phoneNumber, ArrayList<String> groups){
+    public User(String uid, String username, String email, String phoneNumber, ArrayList<Group> groups){
         this.uid = uid;
         this.username = username;
         this.email = email;
         this.phoneNumber = phoneNumber;
         journalList = new ArrayList<Journal>();
         this.groups = groups;
-        profile_picture = null;
+        profilePicture = "";
     }
 
+    public String getProfilePicture() {
+        return profilePicture;
+    }
 
-    public void setProfile_picture(ImageView image){this.profile_picture = image;}
-    //public Drawable getProfile_picture() { return profile_picture.getDrawable(); }
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
     public String getPhoneNumber(){
         return phoneNumber;
     }
-
+public void setPhoneNumber(String number) {this.phoneNumber = number;}
+    public void setUsername(String name) {this.username = name;}
     public List<Journal> getJournals() {
         return journalList;
     }
@@ -56,7 +74,7 @@ public class User {
         return uid;
     }
 
-    public List<String> getGroups() {
+    public List<Group> getGroups() {
         return groups;
     }
 
@@ -64,39 +82,17 @@ public class User {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
     public String getUsername() {
         return username;
     }
-    public void addGroup(String group){
+    public void newGroup(Group group){
         if(this.groups == null){
-            this.groups = new ArrayList<String>();
+            this.groups = new ArrayList<Group>();
         }
         this.groups.add(group);
 
     }
-
-    public void updateDB(){
-        try {
-            FirebaseDatabase.getInstance().getReference("users").child(this.getUid()).setValue(this);
-        } catch (Exception e) {
-            Log.e("Update DB error", e.getMessage());
-        }
-        //FirebaseDatabase.getInstance().getReference("users").child(this.getUid()).setValue(this);
-    }
-
-    @Override
-    public boolean equals(Object o){
-        if(o == null){
-            return false;
-        }
-        if(o.getClass() != this.getClass()){
-            return false;
-        }
-        final User other = (User) o;
-        if(other.getUid() != this.getUid()){
-            return false;
-        }
-        return true;
-    }
-
 }
