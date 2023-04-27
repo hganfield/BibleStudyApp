@@ -1,4 +1,4 @@
-package com.example.biblestudyapp.Journal;
+package com.example.biblestudyapp;
 
 import static android.content.ContentValues.TAG;
 
@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.biblestudyapp.Journal.Journal;
 import com.example.biblestudyapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;

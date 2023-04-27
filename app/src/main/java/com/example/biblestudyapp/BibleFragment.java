@@ -20,13 +20,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.biblestudyapp.Journal.JournalForm;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -117,12 +116,19 @@ public class BibleFragment extends Fragment{
 
     private String id;
 
+    private String previous_chapterId;
+
+    private String next_chapterId;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bible, container, false);
         String trans = "KJV";
+
+        FloatingActionButton previous = view.findViewById(R.id.bible_previous);
+        FloatingActionButton next = view.findViewById(R.id.bible_next);
 
         Bundle bundle = getArguments();
 
@@ -299,6 +305,9 @@ public class BibleFragment extends Fragment{
         bookChapterMap.put("2 Peter", 3);
         bookChapterMap.put("1 John", 5);
 
+
+        View view2 = view;
+
         books_selection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -333,6 +342,10 @@ public class BibleFragment extends Fragment{
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String chapter = adapterView.getItemAtPosition(i).toString();
                 chapter_ref = chapter;
+                reference = book_ref + "." + chapter_ref;
+                dbchapter_ref = book_ref + chapter_ref;
+                System.out.println("Recieved!!!!!");
+                getBible(trans, reference, view2);
             }
 
             @Override
@@ -340,21 +353,24 @@ public class BibleFragment extends Fragment{
 
             }
         });
-        //Debugging
-        System.out.println(book_ref);
-        System.out.println(chapter_ref);
-
-        System.out.println(reference);
-
-        Button retrieve = (Button) view.findViewById(R.id.retrieve);
-        View view2 = view;
-        retrieve.setOnClickListener(new View.OnClickListener() {
+        previous.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                reference = book_ref + "." + chapter_ref;
-                dbchapter_ref = book_ref + chapter_ref;
-                System.out.println("Recieved!!!!!");
-                getBible(trans, reference, view2);
+                getBible(trans,previous_chapterId,view2);
+                int cur_chapter = chapter_selection.getSelectedItemPosition();
+                int cur_book = books_selection.getSelectedItemPosition();
+                cur_chapter--;
+                if(cur_chapter < 0){
+                    cur_book--;
+                }
+
+            }
+        });
+
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getBible(trans,previous_chapterId,view2);
             }
         });
 
@@ -364,8 +380,6 @@ public class BibleFragment extends Fragment{
 
     public void getBible(String trans,String reference, View bible) {
         System.out.println("Getting the verse!!!!!");
-        //String urlParameters = "?content-type=json&include-chapter-numbers=false&include-verse-numbers=true&include-footnotes=false&include-footnote-body=false&include-audio-link=false&include-book-titles=false";
-       // reference = parseRef(reference);
         String request = "https://api.scripture.api.bible/v1/bibles/" + verseMap.get(trans) + "/chapters/" + reference;
         retrieveHighlights(dbchapter_ref, new OnHighlightsRetrievedListener() {
             @Override
@@ -373,7 +387,6 @@ public class BibleFragment extends Fragment{
                 highlightList = highlights;
             }
         });
-        //WebView webView = (WebView) getView().findViewById(R.id.webview);
         new GetVerse(bible).execute(request);
 
     }
@@ -422,6 +435,8 @@ public class BibleFragment extends Fragment{
 
                 JSONObject jsonObject = new JSONObject(response.toString());
                 chapterContent = jsonObject.getJSONObject("data").getString("content");
+                previous_chapterId = jsonObject.getJSONObject("data").getJSONObject("previous").getString("id");
+                next_chapterId = jsonObject.getJSONObject("data").getJSONObject("next").getString("id");
 
             } catch (Exception e) {
                 Log.e(TAG, "Error retrieving chapter content: " + e.getMessage());
@@ -444,16 +459,14 @@ public class BibleFragment extends Fragment{
 
 
                 int i = 1;
-                TextView prev = null;
-                TextView prevprev = null;
                 for (String verse: verses) {
                     final int number = i;
                     TextView verseTextView = new TextView(getContext());
                     verseTextView.setText(i + ". " + Html.fromHtml(verse));
                     verseTextView.setPadding(10, 10, 10, 10);
                     verseTextView.setTextSize(16);
-                    verseTextView.setTextColor(Color.BLACK);
-                    verseTextView.setTextSize(16); // set the font size
+                    verseTextView.setTextColor(Color.WHITE);
+                    verseTextView.setTextSize(16);
                     verseTextView.setLineSpacing(0,1.5f);
                     verseTextView.setTag(i++);
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -470,6 +483,7 @@ public class BibleFragment extends Fragment{
                         System.out.println("In Map");
                         //verseTextView.setTextColor(Color.YELLOW);
                         verseTextView.setBackgroundColor(Color.YELLOW);
+                        verseTextView.setTextColor(Color.BLACK);
                     } else {
                         //verseTextView.setTextColor(defaultTextColor);
                     }
@@ -481,7 +495,7 @@ public class BibleFragment extends Fragment{
                             AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
                             builder.setTitle("Select an action");
 
-                            builder.setPositiveButton("com/example/biblestudyapp/Journal", new DialogInterface.OnClickListener() {
+                            builder.setPositiveButton("Journal", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     journal(verseTextView);
@@ -541,6 +555,7 @@ public class BibleFragment extends Fragment{
     public void highlight(TextView verseTextView){
         String chapterRef = dbchapter_ref;
         verseTextView.setBackgroundColor(Color.YELLOW);
+        verseTextView.setTextColor(Color.BLACK);
         DatabaseReference highlightsRef = FirebaseDatabase.getInstance().getReference("highlights");
         //String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -556,6 +571,7 @@ public class BibleFragment extends Fragment{
                         String highlightId = highlightSnapshot.getKey();
                         highlightsRef.child(id).child(chapterRef).child(highlightId).removeValue();
                         verseTextView.setBackgroundColor(Color.TRANSPARENT);
+                        verseTextView.setTextColor(Color.WHITE);
                         return;
                     }
                 }
