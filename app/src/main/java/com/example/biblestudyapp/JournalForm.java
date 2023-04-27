@@ -1,4 +1,4 @@
-package com.example.biblestudyapp.Journal;
+package com.example.biblestudyapp;
 
 import static android.content.ContentValues.TAG;
 
@@ -9,13 +9,12 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.biblestudyapp.Journal;
 import com.example.biblestudyapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
