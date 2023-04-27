@@ -14,10 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.text.Html;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,17 +26,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.biblestudyapp.Journal.JournalForm;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.collection.LLRBNode;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -52,8 +45,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -110,20 +101,21 @@ public class BibleFragment extends Fragment{
 
     private static Map<String, String> bibleIds;
 
-    public static Map<String, String> bookMap;
+    private static Map<String, String> bookMap;
 
-    public static Map<String, Integer> bookChapterMap;
+    private static Map<String, Integer> bookChapterMap;
 
-    public static String book_ref;
+    private static String book_ref;
 
-    public static String chapter_ref;
+    private static String chapter_ref;
 
-    public static String dbchapter_ref;
+    private static String dbchapter_ref;
 
-    public static String reference;
+    private static String reference;
 
-    private DatabaseReference mDatabase;
+    private static String book;
 
+    private String id;
 
 
     @Override
@@ -132,7 +124,13 @@ public class BibleFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_bible, container, false);
         String trans = "KJV";
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        Bundle bundle = getArguments();
+
+        try{
+            id = bundle.getString("id");
+        }catch(NullPointerException nullPointerException){
+            id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        }
 
         //System.out.println("BEFORECALL!!!!!");
 
@@ -305,7 +303,7 @@ public class BibleFragment extends Fragment{
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 chapter_selection.setVisibility(view.VISIBLE);
-                String book = adapterView.getItemAtPosition(i).toString();
+                book = adapterView.getItemAtPosition(i).toString();
                 book_ref = bookMap.get(book);
                 System.out.println(book_ref);
                 int number_of_books = bookChapterMap.get(book);
@@ -395,6 +393,7 @@ public class BibleFragment extends Fragment{
 
             try {
                 URL obj = new URL(url);
+                System.out.println(url);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                 con.setRequestMethod("GET");
                 con.setRequestProperty("api-key", apikey);
@@ -522,11 +521,13 @@ public class BibleFragment extends Fragment{
 
     public void journal(TextView verseTextView){
         DatabaseReference journalsRef = FirebaseDatabase.getInstance().getReference("journals");
-        String userId = FirebaseAuth.getInstance().getUid();
         Activity activity = getActivity();
         if(activity != null){
             Intent intent = new Intent(activity, JournalForm.class);
-            intent.putExtra("chapter_ref",dbchapter_ref);
+            String verse = verseTextView.getTag().toString();
+            intent.putExtra("chapter_ref",book+" "+chapter_ref+":"+verse);
+            intent.putExtra("db_ref",dbchapter_ref);
+            intent.putExtra("verse",verse);
             startActivity(intent);
         }
         else{
@@ -541,11 +542,11 @@ public class BibleFragment extends Fragment{
         String chapterRef = dbchapter_ref;
         verseTextView.setBackgroundColor(Color.YELLOW);
         DatabaseReference highlightsRef = FirebaseDatabase.getInstance().getReference("highlights");
-        String userId = FirebaseAuth.getInstance().getUid();
+        //String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         //This might be in the wrong place
 
-        highlightsRef.child(userId).child(chapterRef).addListenerForSingleValueEvent(new ValueEventListener() {
+        highlightsRef.child(id).child(chapterRef).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot highlightSnapshot : snapshot.getChildren()) {
@@ -553,16 +554,16 @@ public class BibleFragment extends Fragment{
                     if (highlight.getVerse().equals(verseTextView.getTag().toString())) {
                         // The verse has already been highlighted, delete the highlight
                         String highlightId = highlightSnapshot.getKey();
-                        highlightsRef.child(userId).child(chapterRef).child(highlightId).removeValue();
+                        highlightsRef.child(id).child(chapterRef).child(highlightId).removeValue();
                         verseTextView.setBackgroundColor(Color.TRANSPARENT);
                         return;
                     }
                 }
 
                 // The verse hasn't been highlighted yet, create a new highlight object and store it in the database
-                String highlightId = highlightsRef.child(userId).child(chapterRef).push().getKey();
+                String highlightId = highlightsRef.child(id).child(chapterRef).push().getKey();
                 Highlight highlight = new Highlight(verseTextView.getTag().toString(), Color.YELLOW, highlightId);
-                highlightsRef.child(userId).child(chapterRef).child(highlightId).setValue(highlight);
+                highlightsRef.child(id).child(chapterRef).child(highlightId).setValue(highlight);
             }
 
             @Override
@@ -574,8 +575,9 @@ public class BibleFragment extends Fragment{
 
     public void retrieveHighlights(String chapterRef,OnHighlightsRetrievedListener listener){
         System.out.println("Initializing Map");
+        //String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        DatabaseReference highlightsRef = FirebaseDatabase.getInstance().getReference("highlights").child(FirebaseAuth.getInstance().getUid())
+        DatabaseReference highlightsRef = FirebaseDatabase.getInstance().getReference("highlights").child(id)
                 .child(chapterRef);
         //Query query = highlightsRef.child(FirebaseAuth.getInstance().getUid()).orderByKey().equalTo(chapterRef);
         highlightsRef.addValueEventListener(new ValueEventListener() {

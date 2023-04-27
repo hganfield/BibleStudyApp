@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:theme="@style/Theme.BibleStudyApp.NoActionBar"
-    android:gravity="center"
+    android:gravity="left"
     android:orientation="vertical"
     tools:context=".GroupFragment">
 
@@ -34,7 +34,24 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Button" />
+
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:text="Group's you are in"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/journal_list"
+        android:layout_width="177dp"
+        android:layout_height="321dp"
+        android:layout_weight="1" />
 
 
 </LinearLayout>
