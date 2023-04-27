@@ -1,9 +1,11 @@
 package com.example.biblestudyapp;
 
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,7 @@ public class User {
 
     private List<Journal> journalList;
     private String phoneNumber;
-    private List<Group> groups;
+    private List<String> groups;
 
    // private ImageView profile_picture;
     private DatabaseReference mDatabase;
@@ -33,7 +35,7 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.profilePicture = profilePicture;
         journalList = new ArrayList<Journal>();
-        groups = new ArrayList<Group>();
+        groups = new ArrayList<String>();
     }
     public User(String uid, String username, String email, String phoneNumber){
         this.uid = uid;
@@ -41,10 +43,10 @@ public class User {
         this.email = email;
         this.phoneNumber = phoneNumber;
         journalList = new ArrayList<Journal>();
-        groups = new ArrayList<Group>();
+        groups = new ArrayList<String>();
         profilePicture = "";
     }
-    public User(String uid, String username, String email, String phoneNumber, ArrayList<Group> groups){
+    public User(String uid, String username, String email, String phoneNumber, ArrayList<String> groups){
         this.uid = uid;
         this.username = username;
         this.email = email;
@@ -74,7 +76,7 @@ public void setPhoneNumber(String number) {this.phoneNumber = number;}
         return uid;
     }
 
-    public List<Group> getGroups() {
+    public List<String> getGroups() {
         return groups;
     }
 
@@ -88,11 +90,20 @@ public void setPhoneNumber(String number) {this.phoneNumber = number;}
     public String getUsername() {
         return username;
     }
-    public void newGroup(Group group){
+
+    public void addGroup(String group){
         if(this.groups == null){
-            this.groups = new ArrayList<Group>();
+            this.groups = new ArrayList<String>();
         }
         this.groups.add(group);
 
+    }
+
+    public void updateDB(){
+        try {
+            FirebaseDatabase.getInstance().getReference("users").child(this.getUid()).setValue(this);
+        } catch (Exception e) {
+            Log.e("Update DB error", e.getMessage());
+        }
     }
 }
