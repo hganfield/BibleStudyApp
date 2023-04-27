@@ -1,6 +1,7 @@
 package com.example.biblestudyapp;
 
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.google.firebase.database.DatabaseReference;
@@ -89,25 +90,20 @@ public void setPhoneNumber(String number) {this.phoneNumber = number;}
     public String getUsername() {
         return username;
     }
-    public void newGroup(String group){
-        if(this.groups == null){
-            this.groups = new ArrayList<String>();
-        }
-        this.groups.add(group);
 
-    }
     public void addGroup(String group){
         if(this.groups == null){
             this.groups = new ArrayList<String>();
         }
         this.groups.add(group);
+
     }
 
     public void updateDB(){
-        try{
+        try {
             FirebaseDatabase.getInstance().getReference("users").child(this.getUid()).setValue(this);
-        } catch(Exception e){
-
+        } catch (Exception e) {
+            Log.e("Update DB error", e.getMessage());
         }
     }
 }
