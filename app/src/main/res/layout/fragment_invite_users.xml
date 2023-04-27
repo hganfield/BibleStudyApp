@@ -8,7 +8,6 @@
 
 
     <FrameLayout
-        android:id="@+id/InviteUsers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -25,6 +24,6 @@
         android:id="@+id/finish_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:text="Create Group" />
 
 </LinearLayout>

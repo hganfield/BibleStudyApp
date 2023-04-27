@@ -38,6 +38,8 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  * Use the {@link GroupFragment#newInstance} factory method to
  * create an instance of this fragment.
+ * The Group Fragment that will have all the UI for the group Aspect of the project
+ * Within this Fragment users can create groups, join groups, and visit a specific groups home page
  */
 public class GroupFragment extends Fragment {
 
@@ -49,6 +51,30 @@ public class GroupFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    /*
+    The current user logged into the app
+     */
+    private FirebaseUser user;
+    /*
+    The reference to the group table in FireBase's real time database
+     */
+    private DatabaseReference groupDatabase;
+
+    /*
+    The List of all the user Id's to be added to the group
+     */
+    private List<String> groupList;
+
+    /*
+    The View to display the list of groups the current user is in
+     */
+    private RecyclerView recyclerView;
+
+    /*
+    The Adapter that allows the group name to be shown on the list as well as any other useful objects
+     */
+    private GroupAdapter groupAdapter;
 
     public GroupFragment() {
         // Required empty public constructor
@@ -71,9 +97,19 @@ public class GroupFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
+    /*
+    Retrieving the results of the Intents that jump from this fragment
+     */
     ActivityResultLauncher<Intent> activitiyLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
         public void onActivityResult(ActivityResult result) {
+            if(result.getResultCode() == 1){
+                String groupId = result.getData().toString();
+                groupList.add(groupId);
+                refreshGroupList();
+
+            }
         }
     });
 
@@ -96,14 +132,7 @@ public class GroupFragment extends Fragment {
         ((HomePage) getActivity()).setActionBarVisible(false);
     }
 
-    private FirebaseUser user;
-    private DatabaseReference groupDatabase;
 
-    private List<Group> groupList;
-
-    private RecyclerView recyclerView;
-
-    private GroupAdapter groupAdapter;
 
 
     @Override
@@ -111,33 +140,47 @@ public class GroupFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_group, container, false);
+
+        //Initialize all the variables that will be used in this fragment
         Button create = (Button) view.findViewById(R.id.Cbutton1);
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         groupDatabase = FirebaseDatabase.getInstance().getReference("users");
-        groupList = new ArrayList<Group>();
+        recyclerView = view.findViewById(R.id.journal_list);
+        groupList = new ArrayList<String>();
+
+        refreshGroupList();
+        create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), GroupForm.class);
+                activitiyLauncher.launch(intent);
+            }
+        });
+
+
+        return view;
+    }
+
+    /*
+    Refreshes the RecyclerView to have an updated view of all the groups the current user is in
+     */
+    public void refreshGroupList(){
+        //Retrieving information from the database
         groupDatabase.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
                 System.out.println("Setting groupList");
-                //String groupId = FirebaseDatabase.getInstance().getReference("groups").child()
                 groupList = user.getGroups();
                 if(groupList == null || groupList.isEmpty()){
                     System.out.println("Group List is empty");
                 }
                 else {
                     System.out.println("Here");
-                    for(Group a : groupList){
-                        System.out.println(a.getGroupName());
-                    }
-                    recyclerView = view.findViewById(R.id.journal_list);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    groupAdapter = new GroupAdapter(groupList, new GroupAdapter.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(int position) {
-                            System.out.println("Clicked");
-                        }
-                    });
+                    groupAdapter = new GroupAdapter(groupList,getContext());
+                    recyclerView.setAdapter(groupAdapter);
                 }
             }
 
@@ -146,16 +189,6 @@ public class GroupFragment extends Fragment {
 
             }
         });
-        create.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), GroupForm.class);
-                startActivity(intent);
-            }
-        });
-
-
-        return view;
     }
 
 

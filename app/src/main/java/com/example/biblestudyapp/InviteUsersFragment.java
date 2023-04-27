@@ -1,6 +1,10 @@
 package com.example.biblestudyapp;
 
+import static com.example.biblestudyapp.SearchUtility.getAllItems;
+
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -56,6 +60,46 @@ public class InviteUsersFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    /*
+    The List of userIds
+     */
+    private ArrayList<String> usersList;
+    /*
+    The Current User logged in
+     */
+    private FirebaseUser current_user;
+
+    /*
+    The listView object that lists out all the users
+     */
+    private ListView listView;
+
+    /*
+    The adapter that adapts a list of strings to the listView
+     */
+    private ArrayAdapter<String> adapter;
+
+    /*
+    The Context in which this fragment is running
+     */
+    private Context context;
+
+    /*
+    The reference to the user table of the database
+     */
+    private DatabaseReference user_reference;
+
+    /*
+    The reference to the group table of the database
+     */
+    private DatabaseReference group_ref;
+
+    /*
+    The SharedViewModel that allows multiple fragments to access the list of users that will be added to a group
+     */
+    private SharedViewModel sharedViewModel;
+
+
     public InviteUsersFragment() {
         // Required empty public constructor
     }
@@ -81,7 +125,6 @@ public class InviteUsersFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActivity().setContentView(R.layout.fragment_invite_users);
         setHasOptionsMenu(true);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -90,76 +133,92 @@ public class InviteUsersFragment extends Fragment {
     }
 
 
-    private ArrayList<String> usersList;
-    private FirebaseAuth firebaseAuth;
-    // List View object
-    private ListView listView;
-
-    // Define array adapter for ListView
-    private ArrayAdapter<String> adapter;
-
-    private Context context;
-
-    private DatabaseReference reference;
-
-    private DatabaseReference group_ref;
-
-    private SharedViewModel sharedViewModel;
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        context = this.getContext();
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_invite_users, container, false);
-
+        //Initializing all the variables
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        context = this.getContext();
+        listView = view.findViewById(R.id.listView);
+        current_user = FirebaseAuth.getInstance().getCurrentUser();
+        user_reference = FirebaseDatabase.getInstance().getReference("users");
+        group_ref = FirebaseDatabase.getInstance().getReference("groups");
+        Button createGroup = (Button) view.findViewById(R.id.finish_group);
+        Bundle bundle = getArguments();
+        String g_name = bundle.getString("name");
+        boolean privatebool = bundle.getBoolean("private");
+        String password = bundle.getString("password");
+
+        //Testing
         sharedViewModel.printList();
 
-        listView = view.findViewById(R.id.listView);
-        firebaseAuth = FirebaseAuth.getInstance();
-        reference = FirebaseDatabase.getInstance().getReference("users");
-        group_ref = FirebaseDatabase.getInstance().getReference("groups");
         getAllUsers();
-        Button createGroup = (Button) view.findViewById(R.id.finish_group);
+
+        //Setting onClickListen for the createGroup button
+        //Will check if there are users in the list if there are it will create a new group
         createGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<User> groupList = sharedViewModel.getUserList().getValue();
-                if(groupList == null ||groupList.isEmpty()){
-                }
-                else{
-                    Bundle bundle = new Bundle();
-                    String g_name = bundle.getString("name");
-                    boolean privatebool = bundle.getBoolean("private");
-                    String groupId = group_ref.push().getKey();
-                    if(privatebool){
-                        String password = bundle.getString("password");
-                        Group group = new Group(groupList,g_name,groupId,privatebool,password);
-                    }
-                    Group group = new Group(groupList,g_name,groupId,privatebool);
-                    group_ref.child(groupId).setValue(group);
-                    for(User u : groupList){
-                        u.addGroup(group);
-                    }
-                    getActivity().finish();
+                List<User> userList = sharedViewModel.getUserList().getValue();
+                List<String> groupList = new ArrayList<>();
+                String userId = current_user.getUid();
+                FirebaseDatabase.getInstance().getReference("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        userList.add(snapshot.getValue(User.class));
+                        String groupId = group_ref.push().getKey();
+                        for(User u : userList){
+                            groupList.add(u.getUid());
+                            u.addGroup(groupId);
+                            u.updateDB();
+                        }
+                        if(groupList == null ||groupList.isEmpty() || groupList.size() == 1){
+                        }
+                        else{
 
-                }
+                            Group group;
+                            if(privatebool){
+                                group = new Group(groupList,g_name,groupId,privatebool,password);
+                            }
+                            else {
+                                group = new Group(groupList, g_name, groupId, privatebool);
+                            }
+                            group_ref.child(groupId).setValue(group);
+                            // Set the result data to include the newly created group
+                            Intent resultIntent = new Intent();
+                            resultIntent.putExtra("new_groupId", groupId);
+                            getActivity().setResult(1,resultIntent);
+                            getActivity().finish();
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
 
 
             }
         });
         return view;
     }
+    /*
+    * Gets all of the users that have accounts and sets it to the listView via an adapter
+    * @POSTCONDITION: The listView is set with all the users
+     */
     private void getAllUsers() {
-        reference.addValueEventListener(new ValueEventListener() {
+        user_reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 usersList = new ArrayList<>();
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     User user = dataSnapshot1.getValue(User.class);
-                    if(user.getUid() != null && !user.getUid().equals(firebaseAuth.getCurrentUser().getUid())) {
+                    if(user.getUid() != null && !user.getUid().equals(current_user.getUid())) {
                         //user.getUsername();
                         //Toast.makeText(InviteUsersFragment.this.getContext(), user.getUsername(), Toast.LENGTH_LONG).show();
                         usersList.add(user.getUsername()+ "|" + user.getUid());
@@ -172,6 +231,7 @@ public class InviteUsersFragment extends Fragment {
                 adapter = new ArrayAdapter<String>(context,android.R.layout.simple_list_item_1,usersList){
                     @Override
                     public View getView(int position, View convertView, ViewGroup parent) {
+                        //Makes it so that the userId can be used later
                         View view = super.getView(position, convertView, parent);
                         String part = (String) getItem(position);
                         String[] parts = part.split("\\|");
@@ -186,6 +246,7 @@ public class InviteUsersFragment extends Fragment {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        //Setting the new fragment which will display the user's profile page
                         String text = (String) adapterView.getItemAtPosition(i);
                         String[] parts = text.split("\\|");
                         String uid = parts[1];
@@ -195,7 +256,7 @@ public class InviteUsersFragment extends Fragment {
                         receiverFragment.setArguments(bundle);
                         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.InviteUsers, receiverFragment);
+                        fragmentTransaction.replace(R.id.group_container, receiverFragment);
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
 
@@ -211,6 +272,7 @@ public class InviteUsersFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        //Setting the search bar in the menu
         inflater.inflate(R.menu.main_menu,menu);
         MenuItem menuItem = menu.findItem(R.id.search);
         SearchView searchView = (SearchView) menuItem.getActionView();

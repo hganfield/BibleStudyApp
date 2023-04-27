@@ -1,6 +1,11 @@
 package com.example.biblestudyapp;
 
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.widget.ImageView;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,14 +15,27 @@ public class User {
     private String username;
     private String email;
 
+    private String profilePicture;
+
     private List<Journal> journalList;
     private String phoneNumber;
-    private List<Group> groups;
+    private List<String> groups;
 
-    private ImageView profile_picture;
+   // private ImageView profile_picture;
+    private DatabaseReference mDatabase;
 
     public User(){
 
+    }
+
+    public User(String uid, String username, String email, String phoneNumber, String profilePicture) {
+        this.uid = uid;
+        this.username = username;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.profilePicture = profilePicture;
+        journalList = new ArrayList<Journal>();
+        groups = new ArrayList<String>();
     }
     public User(String uid, String username, String email, String phoneNumber){
         this.uid = uid;
@@ -25,24 +43,32 @@ public class User {
         this.email = email;
         this.phoneNumber = phoneNumber;
         journalList = new ArrayList<Journal>();
-        groups = new ArrayList<Group>();
-        profile_picture = null;
+        groups = new ArrayList<String>();
+        profilePicture = "";
     }
-    public User(String uid, String username, String email, String phoneNumber, ArrayList<Group> groups){
+    public User(String uid, String username, String email, String phoneNumber, ArrayList<String> groups){
         this.uid = uid;
         this.username = username;
         this.email = email;
         this.phoneNumber = phoneNumber;
         journalList = new ArrayList<Journal>();
         this.groups = groups;
-        profile_picture = null;
+        profilePicture = "";
     }
 
-    //public Drawable getProfile_picture() { return profile_picture.getDrawable(); }
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
     public String getPhoneNumber(){
         return phoneNumber;
     }
-
+public void setPhoneNumber(String number) {this.phoneNumber = number;}
+    public void setUsername(String name) {this.username = name;}
     public List<Journal> getJournals() {
         return journalList;
     }
@@ -50,7 +76,7 @@ public class User {
         return uid;
     }
 
-    public List<Group> getGroups() {
+    public List<String> getGroups() {
         return groups;
     }
 
@@ -58,29 +84,26 @@ public class User {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
     public String getUsername() {
         return username;
     }
-    public void addGroup(Group group){
+
+    public void addGroup(String group){
         if(this.groups == null){
-            this.groups = new ArrayList<Group>();
+            this.groups = new ArrayList<String>();
         }
         this.groups.add(group);
 
     }
 
-    @Override
-    public boolean equals(Object o){
-        if(o == null){
-            return false;
+    public void updateDB(){
+        try {
+            FirebaseDatabase.getInstance().getReference("users").child(this.getUid()).setValue(this);
+        } catch (Exception e) {
+            Log.e("Update DB error", e.getMessage());
         }
-        if(o.getClass() != this.getClass()){
-            return false;
-        }
-        final User other = (User) o;
-        if(other.getUid() != this.getUid()){
-            return false;
-        }
-        return true;
     }
 }

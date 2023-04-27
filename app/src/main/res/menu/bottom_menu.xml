@@ -13,7 +13,8 @@
     <item
         android:id="@+id/journal"
         android:title="Journal"
-        android:icon="@drawable/ic_journal_foreground"/>
+        android:icon="@drawable/ic_journalpic_foreground"
+        />
     <item
         android:id="@+id/group"
         android:title="Groups"
