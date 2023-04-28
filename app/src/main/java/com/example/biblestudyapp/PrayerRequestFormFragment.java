@@ -66,8 +66,6 @@ public class PrayerRequestFormFragment extends Fragment {
 
     }
 
-    FirebaseUser user;
-    DatabaseReference database;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,8 +73,7 @@ public class PrayerRequestFormFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         Button create = view.findViewById(R.id.createPR);
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        database = FirebaseDatabase.getInstance().getReference();
+
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

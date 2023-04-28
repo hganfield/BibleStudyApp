@@ -165,16 +165,19 @@ public class PrayerRequestFormActivity extends AppCompatActivity {
         // get prayerRequest table reference
         DatabaseReference prayerRequestRef = FirebaseDatabase.getInstance().getReference("prayer");
 
-        // add prayer request object to table
-        prayerRequestRef.setValue(pr);
+
 
         // get prayer request id
         String prid = prayerRequestRef.child(userid).push().getKey();
 
+        prayerRequestRef.child(groupid).setValue(groupid);
+        // add prayer request object to table
+        prayerRequestRef.child(groupid).child(prid).setValue(pr);
+
         // add to a group's list of prayer requests
         group.addPrayerRequest(prid);
 
-        prayerRequestRef.child(prid).addListenerForSingleValueEvent(new ValueEventListener() {
+        prayerRequestRef.child(groupid).child(prid).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -182,11 +185,11 @@ public class PrayerRequestFormActivity extends AppCompatActivity {
                 pr = snapshot.getValue(PrayerRequest.class);
                 pr.updateDateTime();
                 prayerRequestRef.child(userid).setValue(userid);
-                prayerRequestRef.setValue(groupid);
-                prayerRequestRef.setValue(pr.getDate());
-                prayerRequestRef.setValue(pr.getTime());
-                prayerRequestRef.setValue(pr.getText());
-                prayerRequestRef.setValue(pr.getTitle());
+                prayerRequestRef.child(groupid).setValue(groupid);
+                prayerRequestRef.child(groupid).child(prid).setValue(pr.getDate());
+                prayerRequestRef.child(groupid).child(prid).setValue(pr.getTime());
+                prayerRequestRef.child(groupid).child(prid).setValue(pr.getText());
+                prayerRequestRef.child(groupid).child(prid).setValue(pr.getTitle());
                 //add pr to database
                 // have to get stuff from here, can add stuff elsewhere
             }
