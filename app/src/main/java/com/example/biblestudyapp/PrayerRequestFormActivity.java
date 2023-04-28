@@ -160,16 +160,21 @@ public class PrayerRequestFormActivity extends AppCompatActivity {
         });
 
 
-        // TODO
-        // add to a group's list of prayer requests!!
 
-        // TODO add pr to database
-        // does the below line get the right pr object?
+
+        // get prayerRequest table reference
         DatabaseReference prayerRequestRef = FirebaseDatabase.getInstance().getReference("prayer");
 
+        // add prayer request object to table
         prayerRequestRef.setValue(pr);
-        // TODO should not be userid but prid
-        prayerRequestRef.child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
+
+        // get prayer request id
+        String prid = prayerRequestRef.child(userid).push().getKey();
+
+        // add to a group's list of prayer requests
+        group.addPrayerRequest(prid);
+
+        prayerRequestRef.child(prid).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

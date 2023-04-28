@@ -22,6 +22,8 @@ public class Group {
 
     private String password;
 
+    private List<String> prayerRequests;
+
     public Group(){}
     public Group(List<String> list, String name,String groupId, boolean isPrivate){
         this.groupId = groupId;
@@ -29,6 +31,7 @@ public class Group {
         this.name = name;
         this.isPrivate = isPrivate;
         this.password = "";
+        this.prayerRequests = new ArrayList<>();
     }
 
     public Group(List<String> list, String name,String groupId, boolean isPrivate,String password){
@@ -37,8 +40,12 @@ public class Group {
         this.name = name;
         this.isPrivate = isPrivate;
         this.password = password;
+        this.prayerRequests = new ArrayList<>();
     }
 
+    public void addPrayerRequest(String prid) {
+        prayerRequests.add(prid);
+    }
     public boolean getIsPrivate(){return isPrivate;}
 
     public void setPrivate(boolean value){this.isPrivate = value;}
