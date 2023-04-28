@@ -5,11 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".PrayerRequestFragment">
+    tools:context=".PrayerRequestFormFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/backButton"
@@ -24,9 +21,6 @@
             app:srcCompat="@drawable/ic_backbutton_foreground" />
 
 
-
-    </LinearLayout>
-
     <EditText
         android:id="@+id/PrayerRequestTitle"
         android:layout_width="224dp"
@@ -37,7 +31,7 @@
         android:hint="Title"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf= "parent" />
+        app:layout_constraintTop_toBottomOf= "@+id/backButton" />
 
 
     <EditText
@@ -54,15 +48,27 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/PrayerRequestTitle" />
 
+    <Spinner
+        android:id="@+id/GroupSelection"
+        android:layout_width="96dp"
+        android:layout_height="41dp"
+        android:background="@drawable/drop_down_menus"
+        android:contentDescription="Your Groups"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/PrayerSubmit" />
+
     <Button
         android:id="@+id/PrayerSubmit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="180dp"
-        android:text="submit"
+        android:text="share"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/PrayerRequestText" />
+
+
 
 </LinearLayout>
 
