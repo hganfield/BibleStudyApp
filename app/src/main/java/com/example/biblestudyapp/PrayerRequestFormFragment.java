@@ -2,6 +2,7 @@ package com.example.biblestudyapp;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -84,6 +87,8 @@ public class PrayerRequestFormFragment extends Fragment {
 
     private FirebaseUser user;
 
+    private Activity dummy;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -93,6 +98,12 @@ public class PrayerRequestFormFragment extends Fragment {
 
         this.user = FirebaseAuth.getInstance().getCurrentUser();
         this.database = FirebaseDatabase.getInstance().getReference();
+
+        Spinner groupSelection = view.findViewById(R.id.GroupSelection);
+
+        List<String> usersGroups = database.getInstance().getCurrentUser().child(groups);
+        //TODO
+        //need to set the onSelectionListener or whatever for the groups drop down menu
 
         Button submit = view.findViewById(R.id.PrayerSubmit);
         submit.setOnClickListener(new View.OnClickListener() {
@@ -130,10 +141,6 @@ public class PrayerRequestFormFragment extends Fragment {
                 dialog.show();
             }
         });
-
-
-
-
         return view;
     }
 
@@ -144,8 +151,8 @@ public class PrayerRequestFormFragment extends Fragment {
         EditText textEditText = (EditText) view.findViewById(R.id.PrayerRequestText);
         String textPrayerRequest = textEditText.getText().toString();
 
-        // add a view that lists all the groups a user is in to choose which to share with
 
+        // TODO
         //display prayer request list in a group's homepage
         // add button to add a prayer request
 
@@ -154,6 +161,7 @@ public class PrayerRequestFormFragment extends Fragment {
         String groupId = FirebaseDatabase.getInstance().getReference("group").child(groupId);
         PrayerRequest newPR = new PrayerRequest(titlePrayerRequest, textPrayerRequest, userId, groupId);
         // add to user's list of prayer requests??
+        // TODO
         // add to a group's list of prayer requests!!
 
 
@@ -163,6 +171,7 @@ public class PrayerRequestFormFragment extends Fragment {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // TODO
                 //add pr to database
                 // have to get stuff from here, can add stuff elsewhere
             }
@@ -171,7 +180,7 @@ public class PrayerRequestFormFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e(TAG, "Error querying prayer requests", error.toException());
             }
-        };
+        });
 
 
     }

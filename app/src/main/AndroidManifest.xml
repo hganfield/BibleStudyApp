@@ -19,6 +19,9 @@
         android:theme="@style/Theme.BibleStudyApp"
         tools:targetApi="31">
         <activity
+            android:name=".PrayerRequestFormActivity"
+            android:exported="false" />
+        <activity
             android:name=".GroupHomePage"
             android:exported="false" />
         <activity
