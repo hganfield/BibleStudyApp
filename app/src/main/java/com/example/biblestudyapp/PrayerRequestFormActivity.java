@@ -40,7 +40,6 @@ public class PrayerRequestFormActivity extends AppCompatActivity {
 
     private String groupid;
 
-
     private PrayerRequest pr;
 
     @Override
@@ -70,16 +69,16 @@ public class PrayerRequestFormActivity extends AppCompatActivity {
 
         List<String> usersGroups = user.getGroups();
 
-        // TODO display group name not id
+        // TODO LOW PRIOIRRTY display group name not id
         ArrayAdapter<String> usersGroupsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, usersGroups);
         groupSelection.setAdapter(usersGroupsAdapter);
 
 
         groupSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            //TODO
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-               // groupid = parent.getItemAtPosition(position);
+               groupid = parent.getItemAtPosition(position).toString();
             }
 
             @Override
@@ -142,10 +141,25 @@ public class PrayerRequestFormActivity extends AppCompatActivity {
 
 
         userid = FirebaseAuth.getInstance().getUid();
-        groupid = "test";
-        // String groupId = FirebaseDatabase.getInstance().getReference("group").child(groupid);
         pr = new PrayerRequest(titlePrayerRequest, textPrayerRequest, userid, groupid);
         // add to user's list of prayer requests??
+
+        DatabaseReference groupRef = FirebaseDatabase.getInstance().getReference("group");
+
+
+        groupRef.child(groupid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                group = snapshot.getValue(Group.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
         // TODO
         // add to a group's list of prayer requests!!
 
@@ -153,6 +167,8 @@ public class PrayerRequestFormActivity extends AppCompatActivity {
         // does the below line get the right pr object?
         DatabaseReference prayerRequestRef = FirebaseDatabase.getInstance().getReference("prayer");
 
+        prayerRequestRef.setValue(pr);
+        // TODO should not be userid but prid
         prayerRequestRef.child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
