@@ -32,12 +32,12 @@
                 android:id="@+id/signout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="4dp"
+                android:layout_alignParentEnd = "true"
+                android:layout_marginEnd = "4dp"
                 android:backgroundTint="#2196F3"
                 android:text="Sign Out"
                 android:textColor="@color/black"
-                android:textStyle="bold" />
+                android:textStyle = "bold"/>
         </RelativeLayout>
 
     </androidx.appcompat.widget.Toolbar>
@@ -56,13 +56,13 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/createPR"
         android:layout_width="159dp"
         android:layout_height="89dp"
         android:layout_marginStart="124dp"
         android:layout_marginBottom="200dp"
         android:background="@drawable/button_style"
-        android:text="Journals"
+        android:text="Share Prayer Request"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

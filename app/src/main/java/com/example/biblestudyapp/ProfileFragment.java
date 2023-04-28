@@ -37,11 +37,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.ktx.Firebase;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,10 +63,6 @@ public class ProfileFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
-    private String token1;
-
-    EditText etToken;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -105,33 +99,8 @@ public class ProfileFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        //etToken = getActivity().findViewById(R.id.etToken);
-
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            System.out.println( "Fetching FCM registration token failed");
-                            return;
-                        }
-
-                        // Get new FCM registration token
-                        String token = task.getResult();
-
-                        // Log and toast
-
-                        System.out.println(token);
-                        Toast.makeText(getContext(), "Your device token: "+ token, Toast.LENGTH_SHORT).show();
-
-                        //etToken.setText(token);
-                        token1 = token;
-                    }
-                });
 
     }
-
-
     private TextView name;
 
     private TextView email;
@@ -185,14 +154,8 @@ public class ProfileFragment extends Fragment {
                     email.setText(user.getEmail());
                     number = view.findViewById(R.id.realPhone);
                     number.setText(user.getPhoneNumber());
-                    etToken = view.findViewById(R.id.etToken);
-                    etToken.setText(token1);
-
                     pp = view.findViewById(R.id.profile_image);
-                    Picasso.get()
-                                    .load(user.getProfilePicture())
-                                            .into(pp);
-                    //pp.setImageDrawable(LoadImageFromWebOperations(user.getProfilePicture()));
+                    pp.setImageDrawable(LoadImageFromWebOperations(user.getProfilePicture()));
                 }
 
 
@@ -313,8 +276,6 @@ public class ProfileFragment extends Fragment {
         imgProfile.setImageBitmap(bitmap);
 
     }
-
-
 
 
 }
