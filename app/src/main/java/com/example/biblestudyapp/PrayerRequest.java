@@ -5,20 +5,22 @@ import java.time.LocalTime;
 
 public class PrayerRequest {
 
+    private String title;
     private String text;
 
-    private User requestor;
+    private String user;
 
-    private Group group;
+    private String group;
 
 
     private LocalTime time;
 
     private LocalDate date;
 
-    public PrayerRequest(String text, User requestor, Group group) {
+    public PrayerRequest(String title, String text, String requestor, String group) {
+        this.title = title;
         this.text = text;
-        this.requestor = requestor;
+        this.user = requestor;
         this.group = group;
         this.time = LocalTime.now();
         this.date = LocalDate.now();
@@ -33,19 +35,19 @@ public class PrayerRequest {
         this.text = text;
     }
 
-    public User getRequestor() {
-        return requestor;
+    public String getUser() {
+        return user;
     }
 
-    public void setRequestor(User requestor) {
-        this.requestor = requestor;
+    public void setUser(String user) {
+        this.user = user;
     }
 
-    public Group getGroup() {
+    public String getGroup() {
         return group;
     }
 
-    public void setGroup(Group group) {
+    public void setGroup(String group) {
         this.group = group;
     }
 
