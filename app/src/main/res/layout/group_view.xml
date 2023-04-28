@@ -4,13 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="right"
-    android:orientation="vertical">
+    android:gravity="right">
 
     <TextView
         android:id="@+id/group_title"
         android:layout_width="match_parent"
-        android:layout_height="126dp"
+        android:layout_height="50dp"
         android:text="TextView"
         android:textAlignment="viewStart"
         android:textSize="16sp"

@@ -42,6 +42,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -166,7 +167,7 @@ public class BibleFragment extends Fragment{
         verseMap.put("NTPrv", "17c44f6c89de00db-01");
         verseMap.put("New Arabic Version", "b17e246951402e50-01");
 
-        bookMap = new HashMap<String, String>() {{
+        bookMap = new LinkedHashMap<String, String>() {{
             put("Genesis", "GEN");
             put("Exodus", "EXO");
             put("Leviticus", "LEV");
@@ -237,7 +238,7 @@ public class BibleFragment extends Fragment{
 
         Spinner books_selection = view.findViewById(R.id.spinnerbooks);
         Spinner chapter_selection = view.findViewById(R.id.spinnerchapters);
-        String[] books = bookMap.keySet().toArray(new String[0]);
+        List<String> books = new ArrayList<>(bookMap.keySet());
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, books);
         books_selection.setAdapter(adapter);
 
@@ -360,9 +361,8 @@ public class BibleFragment extends Fragment{
                 int cur_chapter = chapter_selection.getSelectedItemPosition();
                 int cur_book = books_selection.getSelectedItemPosition();
                 cur_chapter--;
-                if(cur_chapter < 0){
-                    cur_book--;
-                }
+                chapter_selection.setSelection(cur_chapter);
+
 
             }
         });
@@ -370,7 +370,11 @@ public class BibleFragment extends Fragment{
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getBible(trans,previous_chapterId,view2);
+                getBible(trans,next_chapterId,view2);
+                int cur_chapter = chapter_selection.getSelectedItemPosition();
+                int cur_book = books_selection.getSelectedItemPosition();
+                cur_chapter++;
+                chapter_selection.setSelection(cur_chapter);
             }
         });
 

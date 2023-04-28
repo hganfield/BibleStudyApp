@@ -141,18 +141,6 @@ public class HomePage extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         System.out.println("HomeResume");
-        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.container);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        if (currentFragment instanceof HomeFragment && isActionBarVisible) {
-            if (toolbar != null) {
-                ConstraintLayout constraintLayout = findViewById(R.id.Menu);
-                constraintLayout.setVisibility(View.VISIBLE);
-            } else {
-                ConstraintLayout constraintLayout = findViewById(R.id.Menu);
-                constraintLayout.setVisibility(View.GONE);
-            }
-
-        }
     }
 
     public void setActionBarVisible(boolean isVisible) {

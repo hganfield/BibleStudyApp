@@ -27,6 +27,7 @@ public class Group {
         this.members = list;
         this.name = name;
         this.isPrivate = isPrivate;
+        this.password = "";
     }
 
     public Group(List<String> list, String name,String groupId, boolean isPrivate,String password){
@@ -44,6 +45,7 @@ public class Group {
     public String getPassword(){return password;}
 
     public void setPassword(String pass){this.password = pass;}
+
     public String getGroupId(){return groupId;}
 
     public void setGroupId(String id){groupId = id;}
