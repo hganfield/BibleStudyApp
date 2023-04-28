@@ -95,7 +95,7 @@ public class JournalForm extends AppCompatActivity {
     }
 
     public void save(){
-        String userId = FirebaseAuth.getInstance().getUid();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference journalref = FirebaseDatabase.getInstance().getReference("journal");
 
         journalref.child(userId).child(ref).addListenerForSingleValueEvent(new ValueEventListener() {
