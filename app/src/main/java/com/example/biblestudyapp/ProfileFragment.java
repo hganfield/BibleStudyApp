@@ -37,9 +37,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.ktx.Firebase;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -64,6 +66,7 @@ public class ProfileFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private String etToken;
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -99,6 +102,26 @@ public class ProfileFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            System.out.println("Fetching FCM registration token failed");
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+
+                        // Log and toast
+                        //String msg = getString(R.string.msg_token_fmt, token);
+                        System.out.println(token);
+                        Toast.makeText(getContext(), token, Toast.LENGTH_SHORT).show();
+
+                        etToken = token;
+                    }
+                });
 
     }
     private TextView name;
@@ -124,6 +147,8 @@ public class ProfileFragment extends Fragment {
     private Button btnUpload;
 
     private DatabaseReference reference;
+
+    private EditText ettoken;
 
     public static Drawable LoadImageFromWebOperations(String url) {
         try {
@@ -155,7 +180,12 @@ public class ProfileFragment extends Fragment {
                     number = view.findViewById(R.id.realPhone);
                     number.setText(user.getPhoneNumber());
                     pp = view.findViewById(R.id.profile_image);
+                    Picasso.get()
+                                    .load(user.getProfilePicture())
+                                            .into(pp);
                     pp.setImageDrawable(LoadImageFromWebOperations(user.getProfilePicture()));
+                    ettoken = view.findViewById(R.id.etToken);
+                    ettoken.setText(etToken);
                 }
 
 
